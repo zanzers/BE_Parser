@@ -1,0 +1,391 @@
+// IdemCom.js
+const BooleanParser = require('./BooleanParser');
+
+class IdemCom extends BooleanParser {
+    constructor(input) {
+        super(input);
+    }
+
+    annulmentdis(position){
+        try{
+            this.say("annulment <- A + 1 || A + 0");
+            const varA = this.packman('A',position);
+            const op = this.packman('+', varA.position);
+            const rhs = this.packman('1', op.position);
+            return new Result(1, rhs.position);
+        } catch {
+            try{
+                const varA = this.packman('A',position);
+                const op = this.packman('+', varA.position);
+                const rhs = this.packman('0', op.position);
+                return new Result(1, rhs.position);
+            }
+            catch (ex){
+                return this.annulmentcon(position);
+            }
+        }
+    }
+    annulmentcon(position){
+        try{
+            this.say("conjunction <- A * 1 || A * 0");
+            const varA = this.packman('A',position);
+            const op = this.packman('*', varA.position);
+            const rhs = this.packman('1', op.position);
+            return new Result(1, rhs.position);
+        } catch (ex) {
+            try{
+                const varA = this.packman('A',position);
+                const op = this.packman('*', varA.position);
+                const rhs = this.packman('0', op.position);
+                return new Result(1, rhs.position);
+            }
+            catch (ex){
+                this.say("annulmet <- Nothing for now [BACKTRACK]");
+                console.log("Nothing left!!!!!");
+                // return this.idemComInstance.idempotent(position);
+          
+            }
+        }
+    }
+    idempotent(position) {
+        try {
+            this.say("Idempotent <- A+A || A*A");
+            const varA = this.packman('A', position);
+            const op = this.packman('+', varA.position);
+            const rhs = this.packman('A', op.position);
+            return new Result(1, rhs.position);
+        } catch (ex) {
+            try {
+                this.say("Idempotent <- A+A || A*A");
+                const varA = this.packman('A', position);
+                const op = this.packman('*', varA.position);
+                const rhs = this.packman('A', op.position);
+                return new Result(1, rhs.position);
+            } catch (ex) {
+                this.say("Associativity <- Idempotent");
+                return this.complement(position);
+            }
+        }
+    }
+
+    // Other methods...
+}
+
+module.exports = IdemCom;
+
+
+
+
+// const IdemCom = require('./grammar/idempotent');
+
+const input  = "A*1";
+
+
+class BooleanParser{
+    constructor(input){
+        this.input = input;
+        this.count = 0;
+        this.idemComInstance = new IdemCom(input);
+    }
+    
+    eval(){
+        try{
+            return this.Goal(0).num.toString();
+        }catch(e){
+            if(e instanceof Fail){
+                return "Cannot parse input";
+            }else{
+                throw e;
+            }
+        }
+    }
+
+    say(msg){
+        console.error(msg);
+        this.count ++;
+    }
+
+    Goal(position){
+        const result = this.annulmentdis(position);
+        this.eof(result.position);
+        return result;
+    }
+
+//  Grammar Rules || Production Rule:
+
+// Annulement
+
+    packman(c, position) {
+        this.say("Char" + c);
+        if(position >= this.input.length){
+            throw new Fail(); //eof
+        }
+        if(this.input.charAt(position) === c) {
+            return new Result(1, position + 1)//Retun 1 for matched character
+        }
+        throw new Fail();
+    }
+    eof(position) {
+        this.say("Eof");
+        if(position <= this.input.length){
+            return new Result(1, position);
+        }
+        throw new Fail();
+    }
+}
+
+
+class Result{
+    constructor(num, position){
+        this.num = num; //result that calcualted so far and position//
+        this.position = position;
+        console.log(num, position);
+    }
+}
+
+class Fail extends Error{
+    constructor(message) {
+        super(message);
+        this.name = "Fail";
+    }
+}
+
+
+
+const parser = new BooleanParser(input);
+const result = parser.eval();
+console.log("Evaluation result:", result);
+
+
+
+
+module.exports = {
+    BooleanParser
+}
+
+
+
+
+
+
+class Result {
+    constructor(num, position) {
+        this.num = num; // result that calculated so far and position
+        this.position = position;
+        console.log(num, position);
+    }
+}
+
+class Fail extends Error {
+    constructor(message) {
+        super(message);
+        this.name = "Fail";
+    }
+}
+
+function booleanParserFunction(input) {
+    let count = 0;
+
+    function say(msg) {
+        console.error(msg);
+        count++;
+    }
+
+    function Goal(position) {
+        const result = annulmentdis(position);
+        eof(result.position);
+        return result;
+    }
+
+    function packman(c, position) {
+        say("Char" + c);
+        if (position >= input.length) {
+            throw new Fail(); // eof
+        }
+        if (input.charAt(position) === c) {
+            return new Result(1, position + 1); // Return 1 for matched character
+        }
+        throw new Fail();
+    }
+
+    function eof(position) {
+        say("Eof");
+        if (position <= input.length) {
+            return new Result(1, position);
+        }
+        throw new Fail();
+    }
+
+    function evalInput() {
+        try {
+            return Goal(0).num.toString();
+        } catch (e) {
+            if (e instanceof Fail) {
+                return "Cannot parse input";
+            } else {
+                throw e;
+            }
+        }
+    }
+
+    function annulmentdis(position) {
+        // Define your annulmentdis logic here
+    }
+
+    return evalInput();
+}
+
+// Example usage:
+const input = "your_input_here";
+const result = booleanParserFunction(input);
+console.log("Evaluation result:", result);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+const input  = "A+1";
+
+
+class BooleanParser{
+    constructor(input){
+        this.input = input;
+        this.count = 0;
+
+    }
+    
+    // eval(){
+    //     try{
+    //         return this.Goal(0).num.toString();
+    //     }catch(e){
+    //         if(e instanceof Fail){
+    //             return "Cannot parse input";
+    //         }else{
+    //             throw e;
+    //         }
+    //     }
+    // }
+
+    say(msg){
+        console.error(msg);
+        this.count ++;
+    }
+
+    // Goal(position){
+    //     const result = this.annulmentdis(position);
+    //     this.eof(result.position);
+    //     return result;
+    // }
+
+//  Grammar Rules || Production Rule:
+    annulmentdis(position){
+         try{
+            this.say("annulment <- A + 1 || A + 0");
+            const varA = this.packman('A',position);
+            const op = this.packman('+', varA.position);
+             const rhs = this.packman('1', op.position);
+            return new Result(1, rhs.position);
+         } catch {
+            try{
+                const varA = this.packman('A',position);
+                const op = this.packman('+', varA.position);
+                const rhs = this.packman('0', op.position);
+            return new Result(1, rhs.position);
+        }
+        catch (ex){
+            return this.annulmentcon(position);
+        }
+    }
+}
+// annulmentcon(position){
+//     try{
+//         this.say("conjunction <- A * 1 || A * 0");
+//         const varA = this.packman('A',position);
+//         const op = this.packman('*', varA.position);
+//         const rhs = this.packman('1', op.position);
+//         return new Result(1, rhs.position);
+//     } catch (ex) {
+//         try{
+//             const varA = this.packman('A',position);
+//             const op = this.packman('*', varA.position);
+//             const rhs = this.packman('0', op.position);
+//             return new Result(1, rhs.position);
+//         }
+//         catch (ex){
+//             this.say("annulmet <- Nothing for now [BACKTRACK]");
+//             console.log("Nothing left!!!!!");
+//             // return this.idemComInstance.idempotent(position);
+      
+//         }
+//     }
+// }
+
+
+
+// Annulement
+
+    packman(c, position) {
+        this.say("Char" + c);
+        if(position >= this.input.length){
+            throw new Fail(); //eof
+        }
+        if(this.input.charAt(position) === c) {
+            return new Result(1, position + 1)//Retun 1 for matched character
+        }
+        throw new Fail();
+    }
+    eof(position) {
+        this.say("Eof");
+        if(position <= this.input.length){
+            return new Result(1, position);
+        }
+        throw new Fail();
+    }
+}
+
+
+class Result{
+    constructor(num, position){
+        this.num = num; //result that calcualted so far and position//
+        this.position = position;
+        console.log(num, position);
+    }
+}
+
+class Fail extends Error{
+    constructor(message) {
+        super(message);
+        this.name = "Fail";
+    }
+}
+
+
+
+const parser = new BooleanParser(input);
+const result = parser;
+console.log("Evaluation result:", result);
+
+
+

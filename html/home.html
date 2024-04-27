@@ -1,0 +1,182 @@
+<!DOCTYE html>
+<html>
+    <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial=scale=1.0">
+            <link rel="stylesheet" href="../css/admin.css">
+            <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Sharp" rel="stylesheet">
+            <title>Boolean Expressions Project </title>
+    </head>
+    <body>
+
+        <div class="transition transition-2 is-active"></div>
+
+        <div class="container">
+        
+            <aside>
+                <div class="toggle">
+                    <div class="logo">
+                        <img src="../Assets/image/logo.png">
+                        <h2>BE<span class="danger">Parser</
+                            span></h2>
+                    </div>
+                <div class="close" id="close_btn">
+                    <span class="material-icons-sharp">
+                        close
+                        </span>
+                  </div>
+                </div>
+            <div class="sidebar">
+                <a href="#">
+                    <span class="material-icons-sharp">
+                        space_dashboard
+                        </span>
+                        <h3>Dashboard</h3>
+                </a>
+                <a href="#">
+                    <span class="material-icons-sharp">
+                        account_circle
+                        </span>
+                        <h3>Nowell</h3>
+                </a>
+                <a href="#">
+                    <span class="material-icons-sharp">
+                        description
+                        </span>
+                        <h3>Document</h3>
+                </a>
+                <a href="#" class="active">
+                    <span class="material-icons-sharp">
+                        insights
+                        </span>
+                        <h3>Analytics</h3>
+                </a>
+                <a href="#">
+                    <span class="material-icons-sharp">
+                        hub
+                        </span>
+                        <h3>Lexical</h3>
+                </a>
+                <a href="#">
+                    <span class="material-icons-sharp">
+                        rocket_launch
+                        </span>
+                        <h3>Syntatic</h3>
+                </a>
+                <a href="#">
+                    <span class="material-icons-sharp">
+                        fence
+                        </span>
+                        <h3>Parsing Technique</h3>
+                </a>
+                <a href="#">
+                    <span class="material-icons-sharp">
+                        forest
+                        </span>
+                        <h3>AST</h3>
+                </a>
+                <a href="../index.html">
+                    <span class="material-icons-sharp">
+                        logout
+                        </span>
+                        <h3>Exit</h3>
+                </a>
+            </div>
+            </aside>
+
+            <main>
+                <h1>Lexical Analytic's</h1>
+                <div class="analyse_container">
+                    <textarea id="input_area" rows="1" placeholder="Enter Here: "></textarea>
+                    <button onclick="parseExpress()" id="btn" class="btn">Parse</button>
+                    <button id="reset" class="btn">Clear</button>               
+                    </div>
+                                        
+                    <div  class="total_tokens">
+                        <h2> Token's Count</h2>
+                        <div class="count_wrapper">
+                        <textarea  id="count_tokens" rows="1" readonly placeholder="Total Tokens" class="tokens_coutns"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="token_stream">
+                        <h2>Token's Stream </h2>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Token's Type</th>
+                                    <th>Lexime</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tokenStreambody"></tbody>
+                        </table>
+                        <a href="#"> DONE</a>
+                    </div>
+                   
+
+            </main>
+
+            <div class="right_section">
+                <div class="nav">
+                    <button id="menu_btn">
+                        <span class="material-icons-sharp">
+                            menu
+                            </span>
+                    </button>
+                        <div class="dark_horse">
+                             <span class="material-icons-sharp active">
+                                    light_mode
+                                    </span>
+                                    <span class="material-icons-sharp ">
+                                        dark_mode
+                                        </span> 
+                        </div>
+                         
+                         <div class="profile">
+                                <div class="info">
+                                    <p>Hello, <b>Nowell</b></p>
+                                    <small class="text_muted">Admin</small>
+                                </div>
+                                <div class="profile_photo">
+                                    <img src="../Assets/image/xi.png">
+
+                                </div>
+                         </div>
+                  </div>
+
+                  <div class="user_profile">
+                    <div class="logo">
+                        <img src="../Assets/image/logo.png">
+                        <h2>BEPARSER</h2>
+                        <p>Boolean Expressions Parser</p>
+                    </div>
+                  </div>
+
+                  <div class="details">
+                    <div class="header">
+                        <h2>Behind The Screen</h2>
+                        <span class="material-icons-sharp">
+                            precision_manufacturing
+                            </span>
+                    
+                    </div>
+
+                    <div class="notification">
+                        <div class="content">
+                            <div class="info">
+                             <textarea  id="count_tokens" rows="1" readonly></textarea>
+
+                        </div>
+                    </div>
+
+
+
+                  </div>
+
+            </div>         
+
+        </div>
+       <script src="../js/main.js"> </script>
+        <script src="../Parser/lexical.js"> </script>
+    </body>
+    </html>
