@@ -8,7 +8,7 @@ const TokensType  = {
     N: 'N',
     EOF: 'EOF'
 };
- 
+  
 function lexi(expression){
 
     let tokens = [];

@@ -2,7 +2,7 @@ const redFlags = require ('./redFlag_parser');
 const { parserLexiA } = require ('./lexical');
 
 let once = false;
- 
+  
 function singleIn(tokens) {
     let chck = tokens[1].type;
     if (!once && (chck === 'R' || chck === 'A')) {

@@ -1,66 +1,67 @@
  
 function commonT(tokens) {
+    
     const common = [];
-    const rst = [];
-    let markerAdded = false;
-    let commonCount = 0;
-    let foundTwoCommon  = false;
-    let nIcaller = "C"
-  
+    const match = [];
+    const rstIn = [];
+
+
+    let nIcaller = "COMBINE";
 
     for (let i = 0; i < tokens.length; i++) {
-        const currentToken = tokens[i];
-        let isCommon = false;
+        if (tokens[i].type === 'I') {
+            const iVal = tokens[i].value;
+            console.log("I VALUE: ", iVal);
+    
+            let matchingI = false;
+      
+            for (let j = i + 1; j < tokens.length; j++) {
+                if (tokens[j].type === 'I' && tokens[j].value === iVal) {
+                    match.push(tokens[j]);
+                    matchingI = true;
+                    console.log("SPLICE: ", j );
+                    tokens.splice(j, 1);
+                    console.log("TOKENS J", rstIn  );
+                    break;
+                }
+            }   
 
-        for (let j = i + 1; j < tokens.length; j++) {
-            if (currentToken.value === tokens[j].value) {
-                isCommon = true;
-                break;
-            }
-        }
 
-        if (isCommon) {
-            if (!common.find(token => token.value === currentToken.value)) {
-                const opToken = findOp(tokens, i, nIcaller)
 
-                common.push( { type: 'LP', value: '(' });
-                common.push(currentToken);
+
+            console.log("J", match);
+            if (matchingI) {
+                console.log("MATCHERI: ", matchingI);
+                common.push({ type: 'LP', value: '(' });
+                common.push(tokens[i]);
+
+                    const opToken = findOp(tokens,i,nIcaller)
+                    if(opToken){
+                    common.push(opToken);
+                    }
 
                 
-                if(opToken){
-                 common.push(opToken);
-                }
-
-                for (let k = i + 1; k < tokens.length; k++) {
-                    if (currentToken.value === tokens[k].value) {
-                        common.push(tokens[k]);
-                        tokens.splice(k, 1);
-                    }
-                }
+                common.push(match[0]);
+                common.push({ type: 'RP', value: ')' });
             
-             
-                commonCount++;
-        
-               
-                if (!markerAdded) {
-                    rst.push({ type: 'Common' });
-                    markerAdded = true;
-                    foundTwoCommon = true;
-                }
-                common.push( { type: 'RP', value: ')' });
-            }
-        } else {
-            rst.push(currentToken);
-        }
+                rstIn.splice(i, 0, { type: 'COMMON' });
 
-     
-        if (foundTwoCommon && commonCount === 2 ) {
-            rst.push(currentToken);
-            break;
+                markerAdded = true;
+            }else{
+                rstIn.push(tokens[i]);
+            }
         }
-       
+        else{
+            rstIn.push(tokens[i]);
+        }
     }
-   return [common, rst];
+
+
+
+    console.log("COMMON:", common);
+    console.log("REST=====:", rstIn);
+
+    return [common, rstIn];
 }
 
 function unCommonT(tokens) {
@@ -68,100 +69,117 @@ function unCommonT(tokens) {
     let update = marKer(tokens); 
     console.log("UPDATE: ", update);
 
+    let firstIndex = null;
+    let found = false;  
     const newsetUnMatched = [];
     const setOfMatched = [];
+    
 
     for (let i = 0; i < update.length; i++) {
-        let found = false;
+        if(update[i].type === 'N' ){
+            firstIndex = i;
+            found =true;
+            console.log("nValN: ", firstIndex);
+            break;
+        }else if(update[i].type === 'U'){
+            firstIndex = i;
+            found = true;
+            console.log("nValU: ", firstIndex);
+            break;
+        }
+    }
 
-        if (update[i].type === 'N'){
-            const nValWithoutN = update[i].value;
-            
-            for (let j = i; j >= 0; j--) {
-                if (!found && update[j].type === 'I' && update[j].value === nValWithoutN) {
+        if(found && update[firstIndex].type === 'N'){
+            const nVal = update[firstIndex].value;
+            console.log("nValllllll: ", nVal);
+
+            let foundI = false
+
+            for (let j = firstIndex; j >= 0; j--) {
+                if (!foundI && update[j].type === 'I' && update[j].value === nVal) {
              
                     let nIcaller ="RL"
                     iBeforeN = { update: update[j], index: j };
                     setOfMatched.push( { type: 'LP', value: '(' });
                     setOfMatched.push(update[j]);
                     
-                    const opToken = findOp(update, i, nIcaller)
+                    const opToken = findOp(update, firstIndex, nIcaller)
                    if(opToken){
                     setOfMatched.push(opToken.update);
                    }
 
-                    setOfMatched.push(update[i]);
+                    setOfMatched.push(update[firstIndex]);
                     setOfMatched.push( { type: 'RP', value: ')' });
                     
-                    update.splice(i, 1);
+                    update.splice(firstIndex, 1);
                     update.splice(j, 1); 
-                    marKer(update);
+                    packman(update);
                     newsetUnMatched.push(update);
-                    found = true;
+                    foundI = true;
                     break;
                     
                 }
             }
-        
-            for (let j = i; j < update.length; j++){
-                if(!found && update[j].type === 'I' && update[j].value === nValWithoutN){
-               
-                    let nIcaller ="LR"
-                    nAfterI = {update: update[j], index: j};
-                    setOfMatched.push({ type: 'LP', value: '('});
-                    setOfMatched.push(update[i]);
+            for (let j = firstIndex; j < update.length; j++){
+                let nIcaller ="LR"
 
-                    const opToken = findOp(update, i, nIcaller)
-                    if(opToken){
-                        setOfMatched.push(update[i]);
-                    }
-                    setOfMatched.push(update[j]);
-                    setOfMatched.push({type: 'RP', value: ')'});
-                    
-                    update.splice(j, 1);
-                    update.splice(i ,1);
-                    marKer(update);
-                    newsetUnMatched.push(update);
-                    found = true;
-                    break;
+               if (!found && update[j].type === 'I' && update[j].value === nVal){
+                nAfterI = {update: update[j], index: j};
+                setOfMatched.push({ type: 'LP', value: '('});
+                setOfMatched.push(update[firstIndex]);
+
+                const opToken = findOp(update, firstIndex, nIcaller)
+               if(opToken){
+                setOfMatched.push(opToken.update);
+               }
+                setOfMatched.push(update[j]);
+                setOfMatched.push({type: 'RP', value: ')'});
+                
+                update.splice(j, 1);
+                update.splice(firstIndex, 1);
+                packman(update);
+                newsetUnMatched.push(update);
+                foundI = true;
+                break;
+               }
+                  
                 }
-            }
+            }else if(found && update[firstIndex].type === 'U'){
+            
+                let nearI = -1;
+                
+                console.log("TYPE U: ", firstIndex);
 
-        
-        }else if(update[i].type === 'U'){
-            let nearI = -1;
-          
-            for(let j =i; j <= update.length; j--){ 
-                if(update[j].type === 'I'){
-                    let nIcaller = "U";
-                    const opToken = findOp(update, i, nIcaller)
-                    setOfMatched.push( { type: 'LP', value: '(' });
-                    setOfMatched.push(update[j]);
-
-                    if(opToken){
-                     setOfMatched.push(opToken);
-                    }
-
-                    setOfMatched.push(update[i]);
-                    setOfMatched.push( { type: 'RP', value: ')' });
-                    update.splice(i, 1);
-                    update.splice(j, 1); 
-
-                    nearI = j;
-                    break;
-                }
-                newsetUnMatched.push(update)
-            }
-
-            console.log("FROM U setOfMatched:", setOfMatched);
-            console.log("FROM U newsetUnMatched:", newsetUnMatched);
-        }
-    }
-
+                for(let j =firstIndex; j <= update.length; j--){ 
+                    if(update[j].type === 'I'){
+                        let nIcaller = "U";
+                        const opToken = findOp(update, firstIndex, nIcaller)
+                        setOfMatched.push( { type: 'LP', value: '(' });
+                        setOfMatched.push(update[j]);
     
+                        if(opToken){
+                         setOfMatched.push(opToken);
+                        }
+    
+                        setOfMatched.push(update[firstIndex]);
+                        setOfMatched.push( { type: 'RP', value: ')' });
+                        update.splice(firstIndex, 1);
+                        update.splice(j, 1); 
+    
+                        nearI = j;
+                        break;
+                    }
+                    newsetUnMatched.push(update)
+                }
+    
+                console.log("FROM U setOfMatched:", setOfMatched);
+                console.log("FROM U newsetUnMatched:", newsetUnMatched);
+            }
 
-    return [setOfMatched, newsetUnMatched[0]];
-}   
+            return [setOfMatched, newsetUnMatched[0]];
+        }
+  
+    
 
 
 
@@ -182,7 +200,7 @@ function findOp(update, start, caller){
             break;
         }
     }
-  }else if(caller === 'C'){
+  }else if(caller === 'COMBINE'){
     
     op = {type: 'R', value: '+'};
 
@@ -199,35 +217,51 @@ function findOp(update, start, caller){
     return op;
 }
 
-function marKer(tokens){
-    
+function marKer(tokens) {
     let once = false;
     const nIndex = tokens.findIndex(token => token.type === 'N');
-    const uIndex = tokens.findIndex(token => token.type === 'U')
+    const uIndex = tokens.findIndex(token => token.type === 'U');
+
+    console.log("Index of 'N':", nIndex);
+    console.log("Index of 'U':", uIndex);
+
+    if (!once && (nIndex !== -1 || uIndex !== -1)) {
+        let insertIndex;
+        if (nIndex !== -1 && uIndex !== -1) {
+            insertIndex = nIndex < uIndex ? nIndex : uIndex;
+        } else {
+            insertIndex = nIndex !== -1 ? nIndex : uIndex;
+        }
+        if (insertIndex === -1) {
+            console.log("No 'N' or 'U' token found.");
+        } else {
+            tokens.splice(insertIndex + 1, 0, { type: 'UNCOMMON' });
+            once = true;
+            console.log("Marker added at index:", insertIndex + 1);
+        }
+    } else {
+        console.log("No 'N' or 'U' token found.");
+    }
+
+    return tokens;
+}
+
+function packman(tokens){
     const mIndex = tokens.findIndex(token => token.type === "UNCOMMON");
 
-    if(!once && nIndex !== -1){
-        const  insert = nIndex + 1;
-        tokens.splice(insert, 0, {type: 'UNCOMMON'});
-        once = true;
-        return tokens;
-
-    }else if (mIndex !== -1){
+    if (mIndex !== -1){
         if(mIndex > 0 && (tokens[mIndex - 1].type === 'R' || tokens[mIndex -1].type === 'A' )){
             tokens.splice(mIndex - 1, 1);
+            once = true
+            console.log("MIDBN:", tokens);
             return tokens;
          }
-    
-    }else if(!once && uIndex !== -1){
-        const insert = uIndex + 1;
-        tokens.splice(insert, 0, {type: 'UNCOMMON'});
-        once = true;
-        return tokens;
-    }else{
-        console.log("NO UNCOMMON FIND!");
-        return tokens;
-    }
+
+        }
 }
+
+
+
 
 
 module.exports = {commonT, unCommonT} ;

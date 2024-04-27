@@ -8,7 +8,7 @@
 
 //LHS: single Output OR input;
 // RHS: more than one input OR output;
-
+ 
  
 function redFlags(input) {
     let count = 0;
