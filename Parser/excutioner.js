@@ -6,27 +6,31 @@ const redFlags = require ('./redFlag_parser');
 function Executioner(rInput, nIn, inputLength, fntInfo) {
 
    let combine = fntRst(rInput, nIn);
+ 
 
-    console.log("COMBINE:" , combine.length);
+    console.log("COMBINE INPUT: " , combine);
 
 // 1st process:
-    let [unCommon, comMon] = unCommonT(combine);
-    let[commonIn,rstIn] = commonT(comMon);
+  
 
-   const [phase1UN] = singleIn(unCommon);
-   const[phaseCOM] = singleIn(commonIn);
 
-   let parserPhaseUN = parserProcess(phase1UN);
-   let parserPhaseCOM = parserProcess(phaseCOM);
 
-   console.log();
    console.log();
     console.log("START PHASE 1: ========================================");
+
+    let [unCommon, comMon] = unCommonT(combine)
+    const [phase1UN] = singleIn(unCommon);
+    let parserPhaseUN = parserProcess(phase1UN);
+
    console.log("UNCOMMON PHASE 1: ", unCommon);
    console.log("REST OF INPUT IN UNCOMMON PHASE 1: ", comMon)
    console.log("UNCOMMON PHASE 1 PARSER OUTPUT: ", parserPhaseUN);
 
-   console.log();
+   console.log("=======================================================");
+
+   let[commonIn,rstIn] = commonT(comMon);
+   const[phaseCOM] = singleIn(commonIn);
+   let parserPhaseCOM = parserProcess(phaseCOM);
 
    console.log("COMMON PHASE 1: ", commonIn);
    console.log("REST OF INPUT IN COMMON PHASE 1: ", rstIn);
@@ -48,6 +52,58 @@ function Executioner(rInput, nIn, inputLength, fntInfo) {
     console.log("UNCOMMON PHASE 2: ", unCommon2);
     console.log("REST OF INPUT IN UNCOMMON PHASE 2: ", comMon2)
     console.log("UNCOMMON PHASE 2 PARSER OUTPUT: ", parserPhaseUN2);
+
+    let[commonIn2,rstIn2] = commonT(comMon2);
+   
+
+
+    console.log("COMMON PHASE 2: ", commonIn2);
+    console.log("REST OF INPUT IN COMMON PHASE 2: ", comMon2);
+    // console.log("COMMON PHASE 2 PARSER OUTPUT: ", parserPhaseCOM2); NO MATCH!
+ 
+    let newIn3 = removerMarker(comMon2,parserPhaseUN2,parserPhaseCOM);  
+    console.log("PROCESS OUTPUT: ", newIn3);
+    console.log("END OF PHASE 2: ========================================");
+    // console.log();
+
+
+// // 3rd Process:
+
+    let [unCommon3, comMon3] = unCommonT(newIn3);   
+    const [phase3UN] = singleIn(unCommon3);
+    let parserPhaseUN3 = parserProcess(phase3UN);
+
+    console.log();
+    console.log("START PHASE 3: ========================================");
+   console.log("UNCOMMON PHASE 3: ", unCommon3);
+   console.log("REST OF INPUT IN UNCOMMON PHASE 3: ", comMon3)
+   console.log("UNCOMMON PHASE 3 PARSER OUTPUT: ", parserPhaseUN3);
+
+   let newIn4 = removerMarker(comMon3,parserPhaseUN3,parserPhaseCOM);  
+   console.log("PROCESS OUTPUT: ", newIn4);
+   console.log("END OF PHASE 3: ========================================");
+   console.log();
+
+// // 4th Process:
+let [unCommon4, comMon4] = unCommonT(newIn3); 
+const [phase4UN] = singleIn(unCommon4);
+let parserPhaseUN4 = parserProcess(phase4UN);
+
+console.log();
+console.log("START PHASE 4: ========================================");
+console.log("UNCOMMON PHASE 4: ", unCommon4);
+console.log("REST OF INPUT IN UNCOMMON PHASE 3: ",comMon4 )
+console.log("UNCOMMON PHASE 4 PARSER OUTPUT: ", phase4UN);
+
+
+    
+    console.log("FINAL:" ,parserPhaseUN4.value);
+
+ 
+// let newIn5 = removerMarker(comMon4,phase4UN,parserPhaseCOM);  
+// console.log("PROCESS OUTPUT: ", newIn5);
+console.log("END OF PHASE 3: ========================================");
+
 
 
 
@@ -104,36 +160,8 @@ function fntRst(rInput, nIn) {
     return rInput;
 }
 
-// function newSetInput(rst,redflg,comn){
- 
-
-//    let newIn = removerMarker(rst,redflg,comn);
 
 
-// //    console.log("rst: ",rst);
-// //    console.log("rstredflg: ",redflg);
-// //    console.log("rstcomn: ",comn);
-// //     console.log("NEWIN: ", newIn);
-// //     console.log("rst_LENGTH", newIn.length);
-
-
-//     let [uN2, cT] = unCommonT(newIn);
-//     const [test1] = singleIn(uN2);
-//     let redflg2 = parserProcess(test1);
-
-//     console.log("TESTT====12", test1);
-//     console.log("REDFLAGOUTPUT2:", redflg2);
-  
-//     console.log("NEWIN UNCOMMON: ", uN2);
-//     console.log("NEWIN CoMMON: ", cT);
-
-
-//    let newIn2 = removerMarker(rst,redflg2,cT);  
-//    console.log("NEWIN2: ", newIn2);
-
-
-
-// }
 
 function removerMarker(rst, redflg, comn) {
     const cT = rst.findIndex(token => token.type === 'COMMON');
@@ -144,8 +172,11 @@ function removerMarker(rst, redflg, comn) {
     }
     if (uN !== -1) {
         rst.splice(uN, 1, redflg);
+
     }
     return rst;
+    
+    
 }
 
 

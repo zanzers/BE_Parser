@@ -16,8 +16,6 @@ function redFlags(input) {
 
     console.log("PARSER: ",input);
 
-
-
     function eval() {
         try {
             return Goal(0).num.toString();
@@ -214,7 +212,7 @@ function redFlags(input) {
     function packman(c, position) {
         // say("Char:" +' '+c);
         if (position >= input.length) {
-            throw new Fail(); //eof
+            throw new Fail(); 
         }
         if (hash[c] && hash[c][position]) {
             // say(`${c} -- retrieving hashed result`);
@@ -224,7 +222,7 @@ function redFlags(input) {
             const result = new Result(1, position + 1);
             if (!hash[c]) hash[c] = {};
             hash[c][position] = result;
-            return result; // Return 1 for matched character
+            return result; 
         }
         throw new Fail();
     }

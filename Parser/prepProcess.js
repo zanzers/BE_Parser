@@ -4,7 +4,9 @@ const { parserLexiA } = require ('./lexical');
 let once = false;
   
 function singleIn(tokens) {
+    console.log("singleIn", tokens);
     let chck = tokens[1].type;
+    console.log("singleIn CHK: ", chck);
     if (!once && (chck === 'R' || chck === 'A')) {
         const opIndex = tokens.findIndex(token => token.type === 'R' || token.type === 'A');
         if (opIndex !== -1) {

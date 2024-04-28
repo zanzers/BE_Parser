@@ -11,21 +11,21 @@
 
 
 
-const arrayOfLetters = ['a', 'b', 'c', 'd', 'e', 'f'];
+// const arrayOfLetters = ['a', 'b', 'c', 'd', 'e', 'f'];
 
-const arrayWithoutB = [];
+// const arrayWithoutB = [];
 
-for (let i = 0; i < arrayOfLetters.length; i++) {
-    if (arrayOfLetters[i] !== 'b') {
-        arrayWithoutH.push(arrayOfLetters[i]);
-    }
-}
+// for (let i = 0; i < arrayOfLetters.length; i++) {
+//     if (arrayOfLetters[i] !== 'b') {
+//         arrayWithoutH.push(arrayOfLetters[i]);
+//     }
+// }
 
-// arrayOfLetters is unchanged
-console.log(arrayOfLetters); // ['a', 'b', 'c', 'd', 'e', 'f']
+// // arrayOfLetters is unchanged
+// console.log(arrayOfLetters); // ['a', 'b', 'c', 'd', 'e', 'f']
 
-console.log(arrayWithoutB); // ['a', 'c', 'd', 'e', 'f']
-// // console.log(x); // Output: "TRUE"
+// console.log(arrayWithoutB); // ['a', 'c', 'd', 'e', 'f']
+// // // console.log(x); // Output: "TRUE"
 
 
 // function annulment(position) {
@@ -178,3 +178,88 @@ console.log(arrayWithoutB); // ['a', 'c', 'd', 'e', 'f']
 // } else {
 // // newsetUnMatched.push(tokens[i]);
 // }
+
+
+
+
+
+
+// marker(tokens);
+// function marker(tokens) {
+
+
+//     let once = false;
+//     const nIndex = tokens.findIndex(token => token.type === 'I');
+//     const uIndex = tokens.findIndex(token => token.type === 'U');
+
+
+//     console.log("nIndex", nIndex);
+//     console.log("uIndex", uIndex);
+//     console.log(tokens);
+
+//     if (!once && (nIndex !== -1 || uIndex !== -1)) {
+
+//         if(nIndex !== -1 && (uIndex === -1 || nIndex < uIndex)){
+//             let matchN   = []
+//             let matchI   = []
+//             for (let i = 0; i < tokens.length; i++) {
+//                 const currentToken = tokens[i];
+//                 for (let j = 0; j < tokens.length; j++) {
+//                     if (i !== j && tokens[j].value === currentToken.value && tokens[j].type !== currentToken.type) {
+//                         console.log("TEST I:", { type: currentToken.value, index: i });
+//                         matchN ={index: i};
+//                         matchI = {index: j}
+//                         once = true;
+//                         break;
+//                     }
+//                 }
+//                 if (once) {
+//                     console.log("TEST N:",matchN);
+//                     console.log("TEST I: ", matchI);
+
+//                     if(matchI.index < matchN){
+//                         tokens.splice(matchN.index + 1, 0, {type: "UNCOMMON"})
+//                         console.log("I < N");
+//                     }else{
+//                         tokens.splice(matchI.index + 1, 0, {type: "UNCOMMON"})
+//                         console.log("N < I");
+//                     } 
+//                     break;
+//                 }
+//             }
+            
+//         } else if (uIndex !== -1 && (nIndex === -1 || uIndex < nIndex)){
+         
+
+//             console.log("UVAL > NVAL: U");
+//             console.log("UINDEX: " , uIndex);
+
+//             if(!once && tokens.length === 1 && (uIndex !== -1)){
+//                 once = true;
+//                 console.log("LAT");
+//                 return tokens
+//             }else{
+//                 tokens.splice(uIndex + 1, 0, {type: "UNCOMMON"})
+//                 once = true;
+//                return tokens;
+//             }
+//         }
+        
+//     }
+
+//     console.log("RETURN:", tokens);
+//     return tokens;
+// }
+
+let text = '';
+let i = 0;
+
+do{
+    text += "The number is: " + i;
+    i++;
+   
+}
+while(i < 20);
+
+
+
