@@ -1,18 +1,4 @@
-/**
- * @author Oscar Nierstrasz
- * $Id: SimplePackrat.java 22063 2008-10-18 14:51:08Z oscar $
- */
 
-import java.util.Hashtable;
-
-/**
- * Here we memoize the results of the three parsing functions with alternatives.
- * 
- * Add <- Mul '+' Add / Mul
- * Mul <- Prim '*' Mul / Prim
- * Prim <- '(' Add ')' / Dec
- * Dec <- '0' / '1' / ... / '9'
- */
 
 public class SimplePackrat extends SimpleParser {
 	Hashtable<Integer,Result>[] hash;
