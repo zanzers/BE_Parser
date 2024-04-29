@@ -326,3 +326,18 @@
 
 //     return [common, rstIn];
 // }
+
+
+
+
+
+
+// let y = {type: update[firstIndex].type, value: update[firstIndex].value, index: firstIndex};
+// console.log("N VALUE::",y)
+//    let nIcaller ="LR"
+
+//    let x = Boolean(!foundI && update[j].type === 'I' && update[j].value === nVal);
+
+
+//    console.log("J VALUE: ",{type: update[j].type , value:update[j].value, index: j});
+//    console.log("STATUS:", x);
