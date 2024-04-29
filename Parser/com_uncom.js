@@ -1,78 +1,78 @@
  
-function commonT(tokens) {
-    
-    const common = [];
-    const match = [];
-    const rstIn = [];
-    let nIcaller = "COMBINE";
-    let matchingI = false;
-
-    for (let i = 0; i < tokens.length; i++) {
-        if (tokens[i].type === 'I') {
-            const iVal = tokens[i].value;
-            console.log("I VALUE: ", iVal);
-    
-     
-      
-            for (let j = i + 1; j < tokens.length; j++) {
-                if (tokens[j].type === 'I' && tokens[j].value === iVal) {
-                    match.push(tokens[j]);
-                    matchingI = true;;
-                    tokens.splice(j, 1);
-                    break;
-                }
-            }   
-
-            if (matchingI) {
-                console.log("MATCHERI: ", matchingI);
-                common.push({ type: 'LP', value: '(' });
-                common.push(tokens[i]);
-
-                    const opToken = findOp(tokens,i,nIcaller)
-                    if(opToken){
-                    common.push(opToken);
-                    }
-
-                
-                common.push(match[0]);
-                common.push({ type: 'RP', value: ')' });
-            
-                rstIn.splice(i, 0, { type: 'COMMON' });
-
-                markerAdded = true;
-            }else{
-                rstIn.push(tokens[i]);
-            }
-        }
-        else{
-            rstIn.push(tokens[i]);
-        }
-    }
-    console.log("MATCH: ", matchingI);
-    if(!matchingI){
-        console.log("NO matching FOUND: ");
-
-        return tokens;
-    }
-
-    return [common, rstIn];
-}
-
-
 
 
 const tokens = [
-    { type: 'N', value: 'A' },
-    { type: 'R', value: '+' },
-    { type: 'N', value: 'A' },
+    { type: 'N', value: 'A' },//NO
     { type: 'N', value: 'B' },
+    { type: 'I', value: 'A' },
     { type: 'R', value: '+' },
-    { type: 'N', value: 'A' },
-    { type: 'N', value: 'B' }
+    { type: 'I', value: 'B' },
+    { type: 'R', value: '+' },
+
 ];
 
+console.log(tokens);
 
-unCommonT(tokens);
+let [rest, com] = commonT(tokens);
+
+// DONE COMMON UNTIL SOMETHING MISS UP AGAIN;
+function commonT(tokens) {
+    
+    let [matchA, matchB] = [[],[]];
+    let found = false;
+
+    for(let i = 0; i < tokens.length; i++) {
+        if(tokens[i].type === 'I' || tokens[i].type === 'N') {
+            const iVal = {type: tokens[i].type, value: tokens[i].value, index: i};
+      
+
+            for(let j = i +1 ; j < tokens.length; j++) {
+                if((tokens[j].type === 'I' || tokens[j].type === 'N') && 
+                (tokens[j].value === tokens[i].value)  && 
+                tokens[j].type === tokens[i].type) {
+
+                    const jVal = {type: tokens[i].type, value: tokens[j].value, index: j}
+                    matchA.push(iVal);
+                    matchB.push(jVal);
+
+                    console.log("JVAL:",iVal);
+                    console.log("IVAL:" , jVal);
+                    found = true; 
+                    break;
+                }
+            }
+            console.log(found);
+            if(found) {
+                let [rst, common] = prepInputCommon(tokens, matchA, matchB);
+                return [rst, common];
+            }
+           
+        }
+    }
+
+
+
+    if (!found) {
+        do {
+            if (tokens.length > 0 && tokens[0].type === 'R') {
+                tokens.shift();
+            }
+            if (tokens.length > 0 && tokens[tokens.length - 1].type === 'R') {
+                tokens.pop();
+            }
+        } while (tokens.length > 0 && (tokens[0].type === 'R' || tokens[tokens.length - 1].type === 'R'));
+    
+        console.log("No match found.");
+        return [tokens, null];
+    }   
+}
+
+     
+console.log("REST OF THE INPUT: ", rest);
+console.log("COMMON TO PASS TO THE PARSER: ", com);
+
+
+
 
 
 
@@ -124,7 +124,6 @@ function unCommonT(tokens) {
             for (let j = firstIndex; j >= 0; j--) {
                 if (!foundI && update[j].type === 'I' && update[j].value === nVal) {
                     
-                       
 
                     let nIcaller ="RL"
                     iBeforeN = { update: update[j], index: j };
@@ -375,16 +374,40 @@ function constant(tokens){
     
 }
 
+function prepInputCommon(tokens, matchA, matchB){
+
+    let common = []
+    let [iIn, jIn] = [matchA[0], matchB[0]];
+    let opToken = findOp(undefined, undefined, "COMBINE");
+    
+    common.push(iIn);
+    common.push(opToken)
+    common.push(jIn);
+
+    tokens.splice(iIn.index, 1, {type: 'COMMON'});
+    tokens.splice(jIn.index, 1);
+
+    return [tokens, common];
+}
 
 
 
 
 
 
+// let opToken = findOp(null, null, nIcaller);
+// common.push({type: 'LP', value: '('});
+// common.push(matchA[0])
+// common.push(opToken)
+// common.push(matchB[0])
+// common.push({type: 'RP', value: ')'});
+// rstIn.splice(matchA, 0 , {type: 'COMMON'});
+// tokens.splice(matchA,1);
+// tokens.splice(matchB,1)
 
 
 
 
 
 
-module.exports = {commonT, unCommonT} ;
+module.exports = {commonT, unCommonT};

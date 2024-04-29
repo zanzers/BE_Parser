@@ -251,15 +251,78 @@
 //     return tokens;
 // }
 
-let text = '';
-let i = 0;
+// let text = '';
+// let i = 0;
 
-do{
-    text += "The number is: " + i;
-    i++;
+// do{
+//     text += "The number is: " + i;
+//     i++;
    
-}
-while(i < 20);
+// }
+// while(i < 20);
 
 
 
+// function commonT(tokens) {
+    
+//     const common = [];
+//     const match = [];
+//     const rstIn = [];
+//     let nIcaller = "COMBINE";
+//     let matchingI = false;
+
+//     for (let i = 0; i < tokens.length; i++) {
+//         if (tokens[i].type === 'I') {
+//             const iVal = tokens[i].value;
+//             console.log("I VALUE: ", iVal);
+    
+     
+      
+//             for (let j = i + 1; j < tokens.length; j++) {
+//                 if (tokens[j].type === 'I' && tokens[j].value === iVal) {
+//                     match.push(tokens[j]);
+//                     tokens.splice(j, 1);
+//                     matchingI = true;;
+//                     break;
+//                 }
+//             }   
+//             console.log("COMMON length: ", match);
+
+//             if (matchingI && common.length >= 2) {
+//                 console.log("MATCHERI: ", matchingI);
+//                 common.push({ type: 'LP', value: '(' });
+//                 common.push(tokens[i]);
+
+//                     const opToken = findOp(tokens,i,nIcaller)
+//                     if(opToken){
+//                     common.push(opToken);
+//                     }
+
+                
+//                 common.push(match[0]);
+//                 common.push({ type: 'RP', value: ')' });
+            
+//                 rstIn.splice(i, 0, { type: 'COMMON' });
+
+//                 markerAdded = true;
+//             }else{
+//                 rstIn.push(tokens[i]);
+//             }
+//         }
+//         else{
+//             rstIn.push(tokens[i]);
+//         }
+//     }
+//     console.log("MATCH: ", matchingI);
+//     if(!matchingI){
+//         console.log("NO matching FOUND: ");
+
+//         return tokens;
+//     }
+
+
+//     console.log("COMMON: ", common);
+//     console.log("REST INPUT: ", rstIn);
+
+//     return [common, rstIn];
+// }
