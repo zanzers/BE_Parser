@@ -1,6 +1,6 @@
 const {findOp,packman,marker,prepInputCommon,prepInputUnCommon} = require ('./necessities');
 
-function status(tokens){
+function statusUN(tokens){
 
     let uncommon;
     let rstIn;
@@ -31,6 +31,25 @@ function status(tokens){
         }
     }
    return  [uncommon, rstIn]
+}
+
+function statusCom(tokens){
+    
+    let commonFound = false;
+    let [psC, parserC] = commonT(tokens)
+
+    for(let token of psC){
+        if(token.type === 'COMMON'){
+            commonFound = true;
+            break;
+        }
+    }
+
+    return {
+        commonFound : commonFound,
+        psC: psC,
+        parserC: parserC
+    }
 }
 
 // DONE COMMON UNTIL SOMETHING MISS UP AGAIN0;
@@ -137,6 +156,6 @@ function unCommonU(update,findIndex){
     return [uncommon, rstIn]; 
 }
 
-module.exports = {status,commonT};
+module.exports = {statusUN,statusCom};
 
 
