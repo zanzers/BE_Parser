@@ -77,6 +77,7 @@ function commonT(tokens) {
         return [packtokens, null];
     }   
 }
+
 // DONE UNCOMMON UNTIL SOMETHING MISS UP AGAIN1;
 function unCommonT(update,firstIndex) {
 
@@ -110,6 +111,7 @@ function unCommonT(update,firstIndex) {
         }
             return [uncommon, rstIn]; 
 }
+
 // DONE UNCOMMON UNTIL SOMETHING MISS UP AGAIN1;
 function unCommonU(update,findIndex){
 
