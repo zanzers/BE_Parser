@@ -341,3 +341,49 @@
 
 //    console.log("J VALUE: ",{type: update[j].type , value:update[j].value, index: j});
 //    console.log("STATUS:", x);
+
+
+
+                
+// console.log("TYPE U: ", firstIndex);
+
+// for(let j =firstIndex; j <= update.length; j--){ 
+//     if(update[j].type === 'I'){
+
+
+//         setOfMatched.push( { type: 'LP', value: '(' });
+//         setOfMatched.push(update[j]);
+//         nIcaller = "U"
+        
+//         const opToken = findOp(update, firstIndex, nIcaller)
+//         if(opToken){
+//          setOfMatched.push(opToken);
+//         }
+
+//         setOfMatched.push(update[firstIndex]);
+//         setOfMatched.push( { type: 'RP', value: ')' });
+//         update.splice(firstIndex, 1);
+//         update.splice(j, 1); 
+        
+
+//         newsetUnMatched.push(update);
+
+//         nearI = j;
+//         break;\
+
+
+
+
+// const tokens = [
+//     { type: 'I', value: 'A' },//
+//     { type: 'R', value: '+' },
+//     { type: 'U', value: '1' },
+//     { type: 'U', value: '1' },//
+//     { type: 'R', value: '+' },
+//     { type: 'U', value: '1' },
+
+// ];
+
+// console.log(tokens);
+
+// let [uncommon, rstIn] = status(tokens);

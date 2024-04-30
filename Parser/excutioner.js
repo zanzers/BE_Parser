@@ -1,9 +1,9 @@
 const { singleIn, parserProcess } = require ('./prepProcess');
-const {commonT, unCommonT} = require('./com_uncom');
+const {status,commonT,} = require('./com_uncom');
 const redFlags = require ('./redFlag_parser');
 
 
-function Executioner(rInput, nIn, inputLength, fntInfo) {
+function Executioner(rInput, nIn) {
 
    let combine = fntRst(rInput, nIn);
  
