@@ -13,7 +13,7 @@ function statusUN(tokens){
     if(status === -1){
         
         console.log("RETURNING INPUT:" , update);
-        return [update,null];
+        return [update, found];
 };
 
     for (let i = 0; i < update.length; i++) {
