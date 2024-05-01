@@ -1,4 +1,22 @@
 const {findOp,packman,marker,prepInputCommon,prepInputUnCommon} = require ('./necessities');
+const { parserProcess } = require('./prepProcess');
+
+
+
+
+// const tokens = [
+
+//     { type: 'I', value: 'A' },
+//     { type: 'R', value: '+' },
+//     { type: 'U', value: '1' },
+
+  
+// ];
+
+// console.log(tokens);
+
+// let [uncommon, rstIn] = statusUN(tokens);
+
 
 function statusUN(tokens){
 
@@ -6,14 +24,16 @@ function statusUN(tokens){
     let rstIn;
     let found =false;
     
+
+    console.log("MARKER", tokens);
     let update = marker(tokens); 
-    console.log("UPDATE: ", update);
+    console.log("UPDATE_statusUN: ", update);
 
     const status = update.findIndex(token => token.type === "UNCOMMON");
     if(status === -1){
         
         console.log("RETURNING INPUT:" , update);
-        return [update, found];
+        return [update, null];
 };
 
     for (let i = 0; i < update.length; i++) {
@@ -33,27 +53,9 @@ function statusUN(tokens){
    return  [uncommon, rstIn]
 }
 
-function statusCom(tokens){
-    
-    let commonFound = false;
-    let [psC, parserC] = commonT(tokens)
-
-    for(let token of psC){
-        if(token.type === 'COMMON'){
-            commonFound = true;
-            break;
-        }
-    }
-
-    return {
-        commonFound : commonFound,
-        psC: psC,
-        parserC: parserC
-    }
-}
 
 // DONE COMMON UNTIL SOMETHING MISS UP AGAIN0;
-function commonT(tokens) {
+function statusCom(tokens) {
     
     let [matchA, matchB] = [[],[]];
     let found = false;
@@ -97,6 +99,7 @@ function commonT(tokens) {
     }   
 }
 
+
 // DONE UNCOMMON UNTIL SOMETHING MISS UP AGAIN1;
 function unCommonT(update,firstIndex) {
 
@@ -109,18 +112,20 @@ function unCommonT(update,firstIndex) {
            
             for (let j = firstIndex; j >= 0; j--) {
                 if (!foundI && update[j].type === 'I' && update[j].value === nVal) {
+                    let indexj = j
                     matchIR = update[j];
                     matchNR = update[firstIndex];
-                     [uncommon, rstIn] = prepInputUnCommon(update, matchIR,matchNR,'RL',firstIndex);
+                     [uncommon, rstIn] = prepInputUnCommon(update, matchIR,matchNR,'RL',firstIndex,indexj);
                     foundI = true;
                     break;
                 }
             }
             for (let j = firstIndex + 1; j < update.length; j++){
                if (!foundI && update[j].type === 'I' && update[j].value === nVal){
+                     let indexj = j
                     matchIL = update[j];
                     matchNL = update[firstIndex];
-                     [uncommon, rstIn] = prepInputUnCommon(update, matchIL,matchNL,'LR',firstIndex);
+                     [uncommon, rstIn] = prepInputUnCommon(update, matchIL,matchNL,'LR',firstIndex,indexj);
                     foundI = true;
                     break;
                }
@@ -134,27 +139,33 @@ function unCommonT(update,firstIndex) {
 // DONE UNCOMMON UNTIL SOMETHING MISS UP AGAIN1;
 function unCommonU(update,findIndex){
 
+
+console.log("unCommonUUUUUUUUUUU::::::::::::;;", update);
+
     let rstIn;
     let uncommon;
 
     if(update[findIndex].type === 'U'){
         let foundI = false;
 
-        console.log("U", update,"F" ,firstIndex);
+        console.log("FROM U", update," FIRSTINDEX" ,firstIndex);
 
-        for(let j = firstIndex; j >=0; j--){
+        for(let j = firstIndex; j <= update.length; j--){
             if(!foundI && update[j].type === 'I'){
-
+                let indexj = j
+                console.log("U: ", update);
                 matchU = update[firstIndex];
                 matchI = update[j];
-                [uncommon, rstIn] = prepInputUnCommon(update, matchU,matchI,'LR',firstIndex);
+                [uncommon, rstIn] = prepInputUnCommon(update, matchU,matchI,'LR',firstIndex,indexj);
                 foundI = true;
                 break;
             }
         }
     }
+    console.log("FROM U:", uncommon, rstIn);
     return [uncommon, rstIn]; 
 }
+// matchI = {type: update[j], value: update[j].value, index: j};
 
 module.exports = {statusUN,statusCom};
 

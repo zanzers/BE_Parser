@@ -349,7 +349,7 @@
 
 // for(let j =firstIndex; j <= update.length; j--){ 
 //     if(update[j].type === 'I'){
-
+            // near -1
 
 //         setOfMatched.push( { type: 'LP', value: '(' });
 //         setOfMatched.push(update[j]);
@@ -607,3 +607,93 @@
 // module.exports = Executioner;
 
 
+// function statusCom(tokens){
+    
+//     let commonFound = false;
+//     let [psC, parserC] = commonT(tokens)
+
+//     for(let token of psC){
+//         if(token.type === 'COMMON'){
+//             commonFound = true;
+//             break;
+//         }
+//     }
+
+//     return {
+//         commonFound : commonFound,
+//         psC: psC,
+//         parserC: parserC
+//     }
+// }
+
+
+// let foundIn = false;
+// let noCommon = false;
+// let natara;
+// do{
+//     let [parserOut, psC] = processStatusUn(combine)
+    
+//    if(!noCommon){
+//      let [nataraTemp, nCommon] = processStatusCom(psC);
+//      natara = nataraTemp
+//      noCommon = nCommon;
+//    }
+
+//    if(parserOut.size > 0){
+//            let newInput = removerMarker(narata,parserOut)
+//            combine = newInput;
+      
+//    }else{
+//     foundIn = true;
+//    }
+
+// }while(!foundIn && !noCommon)
+
+
+
+// console.log("===========================");
+// console.log("PROCESSuNCOMMON: ", parProcessUn);
+
+// console.log("PARSERU: " , parserU);
+// console.log("PSC: ", psC);
+// // console.log("===========================");
+//               console.log("+++++++++++",parserOut );
+
+
+
+// const tokens = [
+//     { type: 'I', value: 'A' },//
+//     { type: 'I', value: 'B' },
+//     { type: 'U', value: '1' },
+//     { type: 'R', value: '+' },//
+//     { type: 'N', value: 'B' },
+
+// ];
+
+// console.log(tokens);
+
+// let [uncommon, rstIn] = statusUN(tokens);
+
+
+// mIndex > 0 && (tokens[mIndex - 1].type === 'R' || tokens[mIndex -1].type === 'A' &&
+
+
+
+const objs = [
+    { type: 'U', value: '1' },
+    { type: 'I', value: 'Hello' }
+];
+
+// Iterate over each object in the array
+objs.forEach((obj, index) => {
+    console.log(`Object ${index + 1}:`);
+    for (const key in obj) {
+        if (Object.prototype.hasOwnProperty.call(obj, key)) {
+            const value = obj[key];
+            if (typeof value === 'string') {
+                const length = value.length;
+                console.log(`  Length of ${key} value: ${length}`);
+            }
+        }
+    }
+});

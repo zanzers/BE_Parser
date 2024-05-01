@@ -9,7 +9,7 @@ const startTime = performance.now();
 // A+A'B+B'
 // A+A'B
 
-const inputs = "A+A'B+B'";
+const inputs = "A+A'B";
 console.log("USER INPUT: ",inputs);
 // const inputv = executioner();
 

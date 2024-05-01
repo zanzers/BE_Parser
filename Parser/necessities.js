@@ -5,16 +5,19 @@ function findOp(update, start, caller){
     switch(caller){
 
         case 'RL':
+            console.log("OP RL");
             for(let j = start; j >= 0; j--){
-                if(update[j].type === 'R'|| update[j].type === 'A'){
+                if(update[j].type === 'R'){
                     op = update[j];
                     break;
                 }
             }
             break;
         case 'LR':
+            console.log("OP LR", start);
             for(let j = start; j >= 0; j++){
-                if(update[j].type === 'R' || update.type === 'A'){
+                if(update[j].type === 'R'){
+                    console.log("LRRR", {type:update[j], value: update[j], index: j});
                     op = update[j];
                     break;
                 }
@@ -43,14 +46,17 @@ function findOp(update, start, caller){
 }
 
 function packman(tokens, ghost){
-    const mIndex = tokens.findIndex(token => token.type === "UNCOMMON");
+    const mIndex = tokens.findIndex(token => token.type === "UNCOMMON" || token.type === "COMMON");
     
     switch(ghost){
         case 'uncommon':
-            console.log("packman", ghost);
+
+        console.log("PACKMAN:", mIndex.length);
+
         if (mIndex !== -1){
-            if(mIndex > 0 && (tokens[mIndex - 1].type === 'R' || tokens[mIndex -1].type === 'A' )){
-                tokens.splice(mIndex - 1, 1);
+            if(mIndex > 0 && (tokens[mIndex - 1].type === 'R' || tokens[mIndex -1].type === 'A' &&
+        mIndex.length === 3)){
+                tokens.splice(mIndex -1, 1);
    
              }
 
@@ -58,7 +64,7 @@ function packman(tokens, ghost){
           break;
 
         case 'common':
-            console.log("packman", ghost);
+         
             do {
                 if (tokens.length > 0 && tokens[0].type === 'R') {
                     tokens.shift();
@@ -69,6 +75,8 @@ function packman(tokens, ghost){
             } while (tokens.length > 0 && (tokens[0].type === 'R' || tokens[tokens.length - 1].type === 'R'));
             break;
     }
+
+
             return tokens
 }
 
@@ -78,8 +86,8 @@ function marker(tokens) {
     const nTokenIndex = tokens.findIndex(token => token.type === 'N');
     const uTokenIndex = tokens.findIndex(token => token.type === 'U');
 
+
     if (!once && (nTokenIndex !== -1 || uTokenIndex !== -1)) {
-        console.log('TRUE');
         if (nTokenIndex !== -1 && (uTokenIndex === -1 || nTokenIndex < uTokenIndex)) {
             let matchN = {};
             let matchU = {};
@@ -122,6 +130,8 @@ function marker(tokens) {
                 return tokens;
             }
         }
+
+
     }
 
     return tokens;
@@ -143,7 +153,7 @@ function prepInputCommon(tokens, matchA, matchB){
     return [tokens, common];
 }
 
-function prepInputUnCommon(update,matchI, matchN, caller, startIn){
+function prepInputUnCommon(update,matchI, matchN, caller, startIn,indexj){
 
     console.log(caller);
     const unCommon = [];
@@ -162,37 +172,42 @@ function prepInputUnCommon(update,matchI, matchN, caller, startIn){
             unCommon.push({type: 'RP', value: ')'});
 
             update.splice(startIn, 1);
-            update.splice(matchI, 1);
+            update.splice(indexj, 1);
             packman(update, "uncommon");
             break;
 
         case 'LR':
             console.log("LR called:");
-            let opTokenL = findOp(update, startIn, caller);
+            let opTokenL = findOp(update, startIn, 'U' );
+
+
+            
+
 
             unCommon.push({type: 'LP', value: '('});
             unCommon.push(matchN);
+            
             unCommon.push(opTokenL);
             unCommon.push(matchI);
             unCommon.push({type: 'RP', value: ')'});
-
+           
             update.splice(startIn, 1);
-            update.splice(matchI, 1);
-            packman(update, "uncommon");
-
+            
+            update.splice(indexj, 1);
+            console.log("LR: ", update);
+            // packman(update, "uncommon");
+            
             break;
         
         case 'FL':
             console.log("FL+++++");
             update.unshift({type: 'LP', value: '('});
             update.push({type: 'RP', value: ')'})
+
+            console.log("FLLLL:", update);
             return update;
             
     }
-
-
-    console.log("prepInputUnCommon", unCommon);
-    console.log("prepInputUnRST:" , update);
 
     return [unCommon,update];
 }
