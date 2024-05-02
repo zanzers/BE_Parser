@@ -1,31 +1,11 @@
 const {findOp,packman,marker,prepInputCommon,prepInputUnCommon} = require ('./necessities');
-const { parserProcess } = require('./prepProcess');
-
-
-
-
-// const tokens = [
-
-//     { type: 'I', value: 'A' },
-//     { type: 'R', value: '+' },
-//     { type: 'U', value: '1' },
-
-  
-// ];
-
-// console.log(tokens);
-
-// let [uncommon, rstIn] = statusUN(tokens);
-
 
 function statusUN(tokens){
 
     let uncommon;
     let rstIn;
     let found =false;
-    
 
-    console.log("MARKER", tokens);
     let update = marker(tokens); 
     console.log("UPDATE_statusUN: ", update);
 
@@ -72,9 +52,6 @@ function statusCom(tokens) {
                     const jVal = {type: tokens[i].type, value: tokens[j].value, index: j}
                     matchA.push(iVal);
                     matchB.push(jVal);
-
-                    console.log("JVAL:",iVal);
-                    console.log("IVAL:" , jVal);
                     found = true; 
                     break;
                 }

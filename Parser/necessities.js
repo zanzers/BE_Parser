@@ -51,7 +51,7 @@ function packman(tokens, ghost){
     switch(ghost){
         case 'uncommon':
 
-        console.log("PACKMAN:", mIndex.length);
+      
 
         if (mIndex !== -1){
             if(mIndex > 0 && (tokens[mIndex - 1].type === 'R' || tokens[mIndex -1].type === 'A' &&
@@ -102,9 +102,6 @@ function marker(tokens) {
                     }
                 }
                 if (once) {
-                    console.log("TEST N:", matchN);
-                    console.log("TEST U: ", matchU);
-
                     if (matchU.index < matchN.index) {
                         tokens.splice(matchN.index + 1, 0, { type: "UNCOMMON" });
                         console.log("U < N");
@@ -164,25 +161,20 @@ function prepInputUnCommon(update,matchI, matchN, caller, startIn,indexj){
         case 'RL':
             console.log("RL called:");
             let opTokenR = findOp(update, startIn, caller);
-
-            unCommon.push({type: 'LP', value: '('});
             unCommon.push(matchI);
             unCommon.push(opTokenR);
             unCommon.push(matchN);
-            unCommon.push({type: 'RP', value: ')'});
+
 
             update.splice(startIn, 1);
             update.splice(indexj, 1);
             packman(update, "uncommon");
+            console.log("PACKAMN:", update);
             break;
 
         case 'LR':
             console.log("LR called:");
             let opTokenL = findOp(update, startIn, 'U' );
-
-
-            
-
 
             unCommon.push({type: 'LP', value: '('});
             unCommon.push(matchN);

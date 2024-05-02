@@ -72,6 +72,7 @@ function parserProcess(fnt) {
     const fntTypes = fnt.map(token => token.type).join('');
     const uToken = fnt.find(token => token.type === 'U');
     if (fntTypes.length <= 5) {
+        console.log(fntTypes, "LENFHTR");
         if (uToken) {
             const uVal = uToken.value;
             const uTokens = fntTypes.replace('U', uVal);
@@ -97,3 +98,24 @@ function parserProcess(fnt) {
 
 
 module.exports = { singleIn, parserProcess };
+
+
+
+function parserProcessing(frontInput){
+    const updateInput = frontInput.map(token => token.type).join('');
+    const uToken = frontInput.find(token => token.type === 'U');
+   
+    if(uToken){
+        const uVal = uToken.value;
+        const updatedInput = updateInput.replace('U', uVal);
+        const result = redFlags(updatedInput);
+        const parserReturn = result.eval();
+        const chkParserOutput = parserLexiA(parserReturn, frontInput);
+        return chkParserOutput;
+    } else {
+        const result = redFlags(updateInput);
+        const parserReturn = result.eval();
+        const chkParserOutput = parserLexiA(parserReturn, frontInput);
+        return chkParserOutput;
+    }
+}

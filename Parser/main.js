@@ -1,33 +1,22 @@
-const { singleIn, parserProcess} = require ('./prepProcess');
 const { lexi} = require ('./lexical');
 const executioner = require ('./excutioner');
-
+const { checkingIn, parserProcessing } = require('./InputPrep');
 
 const startTime = performance.now();
 
 
-// A+A'B+B'
-// A+A'B
-
-const inputs = "A+A'B+B'";
-console.log("USER INPUT: ",inputs);
-// const inputv = executioner();
-
-
-
-let inputLength = inputs.length;
+const inputs = "A+A'B";
+console.log("Main USER INPUT: ",inputs);
 const tokens = lexi(inputs);
+const [checking,returnIn] = checkingIn(tokens)
+const parserReturn = parserProcessing(checking);
+executioner(returnIn,parserReturn)
 
-console.log("Tokens INPUT: ", tokens);
 
-const [fnt, rst] = singleIn(tokens);
-
-console.log("Process_PARSER_Input_MAIN: ",fnt);
-
-let x = parserProcess(fnt);
-
-console.log("PARSER VALUE: ", x);
-let y = executioner(rst,x,inputLength);
+// console.log("Main Lexe OUTPUT:", tokens);
+// console.log("Main CHIKING IN :", checking);
+// console.log("Main Return In:" ,returnIn);
+// console.log("Main Parser ouput:", parserReturn);
 
 
 
@@ -36,13 +25,5 @@ const elapsedTime = performance.now() - startTime;
 console.log("Time taken:", elapsedTime.toFixed(2), "milliseconds");
 
 
-
-
-
-// console.log();
-// console.log("PARSER INPUT:",  fnt);
-// console.log();
-// console.log("parserProcess: ", x );
-// console.log("EXECUTIONER: ", y );
  
-module.exports = {parserProcess};
+module.exports = {parserProcessing};

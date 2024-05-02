@@ -6,14 +6,10 @@ function combineIn(reMain, parserOutput) {
         return reMain;
     }
 
-    const markerIndex = reMain.findIndex(token => token.type === 'MARKER');
-    const eofIndex = reMain.findIndex(token => token.type === 'EOF')
-
-    if (markerIndex !== -1 || eofIndex !==-1) {
+    const markerIndex = reMain.findIndex(token => token.type === 'MARKER'); 
+    if (markerIndex !== -1) {
         reMain.splice(markerIndex, 1);
-        reMain.splice(eofIndex -1, 2);
         reMain.splice(markerIndex, 0, ...parserOutput);
-
         for(let i = 0; i < reMain.length; i++){
             if(reMain[i].type === 'S'){
                 reMain[i].type = 'I';
@@ -21,6 +17,7 @@ function combineIn(reMain, parserOutput) {
         }
     }
    
+    console.log("Combine Success!");
     return reMain;
 }
 

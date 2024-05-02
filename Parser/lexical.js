@@ -6,7 +6,6 @@ const TokensType  = {
     RP: 'RP',
     U: 'U',
     N: 'N',
-    EOF: 'EOF'
 };
   
 function lexi(expression){
@@ -55,14 +54,16 @@ function lexi(expression){
             continue;
         }
 
-        if(/[10]/.test(char)){
+        if(/[01]/.test(char)){
+            console.log("1-----0",char);
             tokens.push({
                 type: TokensType.U,
                 value: char
             });
-            currentPosition++;
+            currentPosition += char.length; 
             continue;
         }
+        
         
         if (/[+*]/.test(char)) {
             let gateType = char === '+' ? TokensType.R : TokensType.A;
@@ -86,9 +87,6 @@ function lexi(expression){
 
     }
 
-    tokens.push({
-        type: TokensType.EOF
-    });
     return tokens;
 }
 
