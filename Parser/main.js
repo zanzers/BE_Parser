@@ -9,7 +9,7 @@ const startTime = performance.now();
 // A+A'B+B'
 // A+A'B
 
-const inputs = "A+A'B";
+const inputs = "A+A'B+B'";
 console.log("USER INPUT: ",inputs);
 // const inputv = executioner();
 
@@ -22,7 +22,7 @@ console.log("Tokens INPUT: ", tokens);
 
 const [fnt, rst] = singleIn(tokens);
 
-console.log("parserProcessInput: ",fnt);
+console.log("Process_PARSER_Input_MAIN: ",fnt);
 
 let x = parserProcess(fnt);
 

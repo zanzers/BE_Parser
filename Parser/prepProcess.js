@@ -68,6 +68,7 @@ function processParenth(tokens) {
 
 
 function parserProcess(fnt) {
+    console.log("parserProcessIIIN PUT:", fnt);
     const fntTypes = fnt.map(token => token.type).join('');
     const uToken = fnt.find(token => token.type === 'U');
     if (fntTypes.length <= 5) {
@@ -77,11 +78,13 @@ function parserProcess(fnt) {
             let result = redFlags(uTokens);
             const parserOutput = result.eval();
             console.log("parserProcessOutputz: ", parserOutput);
+            
             const chckparser = parserLexiA(parserOutput, fnt);
             return chckparser;
         } else {
             let result = redFlags(fntTypes);
             const parserOutput = result.eval();
+            const uTokens = fntTypes.replace('RED', result);
             console.log("parserProcessOutputz: ", parserOutput);
             const chckparser = parserLexiA(parserOutput, fnt);
             return chckparser;

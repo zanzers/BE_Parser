@@ -26,17 +26,24 @@ function combineIn(reMain, parserOutput) {
 
 function removerMarker(reMain, inputs) {
 
+    console.log("removerMarker", reMain);
+    console.log("MArker" , inputs);
+
     const flag = reMain.findIndex(token => token.type === 'UNCOMMON' || token.type === 'COMMON');
     
 
     if (flag !== -1) {
-        console.log("SUCCESS To remove", inputs);
+        console.log("SUCCESS To remove", flag);
         reMain.splice(flag, 1, inputs);
         
     }
+    
     return reMain
     
 }
+
+
+
 
 
 module.exports = {combineIn,removerMarker};
