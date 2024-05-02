@@ -1,0 +1,12 @@
+prepProces: A+A don't need to go in singleIn..
+unless A+A'B==  this kind of input need to expand. One pattern of this to check the length of the input if input length 3 or === 3... then go directly to parser and as Final.
+Any input that greater than 3 directly go to Executioner to process in red flag..
+
+Especial Case were Input are ()().. () need to Go to Parser RHS or to further check this include Distributive, Absorbtion,De Morgan and double Negation and more.
+
+In the  Executioner under Checking Case;
+
+if input length=3 then proceed to parser..
+
+if not continue to process the uncommon and common until the output length === 3
+Any chance that their are some input that not meet let's just see what I can do.
