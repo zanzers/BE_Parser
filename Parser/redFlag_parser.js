@@ -147,16 +147,18 @@ function redFlags(input) {
 
     function inCase(position){
         try{
-            const varA = packman('0', position);
-            const gate = packman('R', varA.position);
-            const rhs = packman('1', gate.position);
-            return new Result ('1', rhs.position);
+            // say(" " + "Encase NAN <- [BACKTRACK]"); 
+            const varA = packman('N', position);
+            const gate = packman('A', varA.position);
+            const rhs = packman('N', gate.position);
+            return new Result ('N', rhs.position);
         }catch{
             try{
-                const varA = packman('1', position);
-                const gate = packman('R', varA.position);
+                // say(" " + "Encase NAU <- [BACKTRACK]"); 
+                const varA = packman('N', position);
+                const gate = packman('A', varA.position);
                 const rhs = packman('1', gate.position);
-                return  new Result('1', rhs.position);
+                return  new Result('N', rhs.position);
             }catch{
                 try{
                     const varA = packman('1', position);
@@ -177,10 +179,10 @@ function redFlags(input) {
                             return new Result ('0', rhs.position);
                         }catch{
                             try{
-                                const varA = packman('1', position);
-                                const gate = packman ('A', varA.position);
+                                const varA = packman('N', position);
+                                const gate = packman ('R', varA.position);
                                 const rhs = packman ('1', gate.position);
-                                return new Result ('1', rhs.position);
+                                return new Result ('N', rhs.position);
                             }catch{
                                 // say("AbsorptiveLhs [BACKTRACT]")
                                 return absorptiveLhs(position);
@@ -256,11 +258,4 @@ function redFlags(input) {
 
 module.exports = redFlags;
 
-
-// const input = "I";
-// const parser = RedFlags(input);
-
-// console.log(input);
-// console.log("Result: " + parser.eval());
-// console.log("Steps: " + parser.count);
 

@@ -1,48 +1,46 @@
-const { singleIn, parserProcess} = require ('./prepProcess');
 const { lexi} = require ('./lexical');
+const readline = require('readline');
 const executioner = require ('./excutioner');
+const { checkingIn, parserProcessing } = require('./InputPrep');
+const Executioner = require('./excutioner');
 
+function main(){
 
 const startTime = performance.now();
+const Output = [];
 
 
-// A+A'B+B'
-// A+A'B
+// TEST!
+// AA+AA || A+A || A+1 || A*A  all red Flag;
+// A+A;B ||  A+A'B+B || A'B'C+A'BC+BC'+B'C' || ABC+A'+AB'C || A'B'C'+A'B'C+A'C';
+// Input that parser not been introduce yet!! (),
+const inputs = "A+A";
+console.log("user_input: ",inputs);
 
-const inputs = "A+A'B";
-console.log("USER INPUT: ",inputs);
-// const inputv = executioner();
-
-
-
-let inputLength = inputs.length;
 const tokens = lexi(inputs);
+console.log("Token's Stream:", tokens);
 
-console.log("Tokens INPUT: ", tokens);
+if(inputs.length === 3){
+    result = parserProcessing(tokens)
+    Output.push(result);
+}else{
+    const [checking, returnIn] = checkingIn(tokens);
 
-const [fnt, rst] = singleIn(tokens);
+    if(returnIn === null){
+        executioner(checking, null);
+    }else{
+        const parserRetutn = parserProcessing(checking);
+        executioner(returnIn, checking)
+    }
+}
 
-console.log("parserProcessInput: ",fnt);
-
-let x = parserProcess(fnt);
-
-console.log("PARSER VALUE: ", x);
-let y = executioner(rst,x,inputLength);
-
-
-
-
+console.log("Output:" , Output);
 const elapsedTime = performance.now() - startTime; 
 console.log("Time taken:", elapsedTime.toFixed(2), "milliseconds");
 
+}
 
+main();
 
-
-
-// console.log();
-// console.log("PARSER INPUT:",  fnt);
-// console.log();
-// console.log("parserProcess: ", x );
-// console.log("EXECUTIONER: ", y );
  
-module.exports = {parserProcess};
+module.exports = {parserProcessing};

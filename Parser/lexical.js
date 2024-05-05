@@ -6,14 +6,13 @@ const TokensType  = {
     RP: 'RP',
     U: 'U',
     N: 'N',
-    EOF: 'EOF'
 };
   
 function lexi(expression){
 
     let tokens = [];
     let currentPosition = 0;
-
+    previousToken = null;
     while (currentPosition < expression.length){
         let char = expression[currentPosition];
 
@@ -34,35 +33,38 @@ function lexi(expression){
             
                 char = expression[currentPosition];
             }
-
-            let nextChar = expression[currentPosition];
-
-            if (nextChar === "'") {
-                currentPosition++;
-                tokens.push({
-                    type: TokensType.N,
-                    value: input
-                });
-            } else {
                 for (let i = 0; i < input.length; i++) {
                     tokens.push({
                         type: TokensType.I,
                         value: input[i]
                     });
                 }
-            }
-
             continue;
         }
 
-        if(/[10]/.test(char)){
+        if(char === "'"){
+            let prevToken = tokens.pop(); 
+            if (prevToken.type === TokensType.I) {
+                tokens.push({
+                    type: TokensType.N,
+                    value: prevToken.value 
+                });
+            } else {
+                throw new Error('Warning: Invalid usage of prime character');
+            }
+            currentPosition++;
+            continue;
+        }
+
+        if(/[01]/.test(char)){
             tokens.push({
                 type: TokensType.U,
                 value: char
             });
-            currentPosition++;
+            currentPosition += char.length; 
             continue;
         }
+        
         
         if (/[+*]/.test(char)) {
             let gateType = char === '+' ? TokensType.R : TokensType.A;
@@ -86,26 +88,40 @@ function lexi(expression){
 
     }
 
-    tokens.push({
-        type: TokensType.EOF
-    });
     return tokens;
 }
 
-function parserLexiA(parserOutput, fnt){
-    chk = parserOutput.length;
-    console.log("CHK: ",chk)
-    if(parserOutput === '1' || parserOutput === '0'){
-        let x = {type: 'U', value: parserOutput};
-        return x;
-    }else if(chk === 1 && parserOutput === 'I'){
-        const iToken = fnt.find(token => token.type === 'I');
-        let x = {type: 'I', value: iToken.value};
-        return x;
-    }else{
-       let x = parserLexiB(parserOutput, fnt);
-        return x;
+function parserLexiA(parserOutput, frontTokens){
+    chk = parserOutput;
+    let result;
+
+
+    switch(chk){
+        case '1':
+            result = lexi(parserOutput);
+            break;
+        case '0':
+            result = lexi(parserOutput);
+            break;
+        case 'I':
+            const iToken = frontTokens.find( token => token.type === 'I');
+            iVal = iToken.value;
+            result = lexi(iVal);
+            break;
+        case 'N':
+            const nTokens = frontTokens.find( token => token.type === 'N');
+            nVal = nTokens.value
+            result = lexi(nVal);
+            result[0].type = 'N'
+
+            break;
+        default:
+            result = parserLexiB(parserOutput,frontTokens)
+            console.log('B:', result);
+            return result;   
     }
+    return result[0];
+  
 }
     
 function parserLexiB(parserOutput, fnt) {
@@ -113,7 +129,8 @@ function parserLexiB(parserOutput, fnt) {
     const iToken = fnt.find(token => token.type === 'I');
     const inputValue = iToken ? iToken.value : null;
     for (let i = 0; i < parserOutput.length; i++) {
-        const type = parserOutput[i];
+
+        let type = parserOutput[i];
         let value = null;
         switch (type) {
             case 'I':
@@ -123,6 +140,7 @@ function parserLexiB(parserOutput, fnt) {
                 value = '+';
                 break;
             case 'S':
+                type = 'I';
                 value = 'B';
                 break;
 
@@ -131,11 +149,6 @@ function parserLexiB(parserOutput, fnt) {
     }
     return tokens;
 }
-
-
-
-
-
 
 
 module.exports = {

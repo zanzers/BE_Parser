@@ -1,58 +1,63 @@
 
+// finding the right operation;
 function findOp(update, start, caller){
     let  op = null;
+
+    console.log("operator of the tokens:", update,start,caller);
 
     switch(caller){
 
         case 'RL':
-            console.log("OP RL");
-            for(let j = start; j >= 0; j--){
-                if(update[j].type === 'R'){
-                    op = update[j];
-                    break;
-                }
-            }
-            break;
-        case 'LR':
-            console.log("OP LR", start);
+            console.log("CASE: RHS", start);
             for(let j = start; j >= 0; j++){
                 if(update[j].type === 'R'){
-                    console.log("LRRR", {type:update[j], value: update[j], index: j});
                     op = update[j];
+                    opIndex = {index: j}
                     break;
                 }
             }
             break;
-        case 'U':
-            const prevToken = start -1;
-            console.log("U", prevToken);
-            const prevTokenType = update[prevToken].type;
 
-            if(prevToken >= 0){
-                if(prevTokenType === 'R'){
-                    op = {type: 'R', value: '+'};
-                }else if(prevTokenType === 'I'){
-                    op ={type: 'A', value: '*'};
+        case 'LR':
+                console.log("CASE: LHS");
+                if(start){
+                    op = {type: 'R', value: '+'}
+                }else{
+                    op = {type: 'A', value: '*'}
                 }
-            }
+
             break;
         default:
+
             op = {type: 'A', value: '*'}
             break;
 
     }
-  console.log("OPERARTION: ",op);
+    console.log("Operator found: ",op);
     return op;
 }
 
+function separator(update,matchI, matchN){
+
+    let gosh = false;
+    for (let i = matchI; i <= matchN; i++) {
+        if (i >= 0 && update[i].type === 'R') {
+            gosh = true;
+            
+            break;
+        }
+    }
+    return gosh;
+    
+}
+
+
+// removing excced operation in the input;
 function packman(tokens, ghost){
     const mIndex = tokens.findIndex(token => token.type === "UNCOMMON" || token.type === "COMMON");
     
     switch(ghost){
         case 'uncommon':
-
-        console.log("PACKMAN:", mIndex.length);
-
         if (mIndex !== -1){
             if(mIndex > 0 && (tokens[mIndex - 1].type === 'R' || tokens[mIndex -1].type === 'A' &&
         mIndex.length === 3)){
@@ -64,7 +69,6 @@ function packman(tokens, ghost){
           break;
 
         case 'common':
-         
             do {
                 if (tokens.length > 0 && tokens[0].type === 'R') {
                     tokens.shift();
@@ -75,143 +79,131 @@ function packman(tokens, ghost){
             } while (tokens.length > 0 && (tokens[0].type === 'R' || tokens[tokens.length - 1].type === 'R'));
             break;
     }
-
-
             return tokens
 }
 
-function marker(tokens) {
+// reference function for the retrun of Common and Uncommon;
+function marker(tokens){
 
-    let once = false;
-    const nTokenIndex = tokens.findIndex(token => token.type === 'N');
-    const uTokenIndex = tokens.findIndex(token => token.type === 'U');
+        let once = false;
+        const nTokenIndex = tokens.findIndex(token => token.type === 'N');
+        const uTokenIndex = tokens.findIndex(token => token.type === 'U');
 
-
-    if (!once && (nTokenIndex !== -1 || uTokenIndex !== -1)) {
-        if (nTokenIndex !== -1 && (uTokenIndex === -1 || nTokenIndex < uTokenIndex)) {
-            let matchN = {};
-            let matchU = {};
-            for (let i = 0; i < tokens.length; i++) {
+        
+             
+    if(!once && uTokenIndex !== -1){
+        tokens.splice(uTokenIndex+ 1, 0, {
+            type: "UNCOMMON"
+        });
+        once = true;
+    }else if(!once && nTokenIndex !== -1){
+        
+            let x,y;
+            for(let i = 0; i < tokens.length; i++){
                 const currentToken = tokens[i];
-                for (let j = 0; j < tokens.length; j++) {
-                    if (i !== j && tokens[j].value === currentToken.value && tokens[j].type !== currentToken.type) {
-                        matchN = { index: i };
-                        matchU = { index: j };
-                        once = true;
-                        break;
-                    }
-                }
-                if (once) {
-                    console.log("TEST N:", matchN);
-                    console.log("TEST U: ", matchU);
 
-                    if (matchU.index < matchN.index) {
-                        tokens.splice(matchN.index + 1, 0, { type: "UNCOMMON" });
-                        console.log("U < N");
-                    } else {
-                        tokens.splice(matchU.index + 1, 0, { type: "UNCOMMON" });
-                        console.log("N < U");
-                    }
-                 
-                    return tokens;
+                for(let j = 0; j < tokens.length; j++){
+                    if( i !== j && tokens[j].value === currentToken.value
+                        && tokens[j].type !== currentToken.type){
+                    
+                     x = {index: i}
+                     y = {index: j}
+                    once = true;
+                    break;
                 }
             }
-        } else if (uTokenIndex !== -1 && (nTokenIndex === -1 || uTokenIndex < nTokenIndex)) {
-            console.log(uTokenIndex);
-            if (!once && tokens.length === 3 && uTokenIndex !== -1) {
-                once = true;
-      
-                prepInputUnCommon(tokens,null,null,'FL',null)
-                return tokens;
-            } else {
-                tokens.splice(uTokenIndex + 1, 0, { type: "UNCOMMON" });
-                once = true;
-              
-                return tokens;
+
+                if(once){
+                    tokens.splice(y.index + 1, 0 , {
+                        type: "UNCOMMON"
+                    })
+             
+                    break;
+                }
+
+
             }
-        }
-
-
     }
-
     return tokens;
 }
 
+// Input prepration for common to pass to the parser;
 function prepInputCommon(tokens, matchA, matchB){
 
     let common = []
     let [iIn, jIn] = [matchA[0], matchB[0]];
-    let opToken = findOp(undefined, undefined, "COMBINE");
-    
+   
     common.push(iIn);
-    common.push(opToken)
+    common.push({type: 'A', value: '*'});
     common.push(jIn);
 
     tokens.splice(iIn.index, 1, {type: 'COMMON'});
     tokens.splice(jIn.index, 1);
 
+    console.log("Genarating Input for common:" ,common);
+
     return [tokens, common];
 }
 
-function prepInputUnCommon(update,matchI, matchN, caller, startIn,indexj){
+// Generatign Parser input for set of Uncommon;
+function prepInputUnCommon(update,matchI, matchN, caller,gosh){
 
-    console.log(caller);
-    const unCommon = [];
-    
+    const parserTokens = [];
+    let pass = false;
 
     switch(caller){
 
         case 'RL':
-            console.log("RL called:");
-            let opTokenR = findOp(update, startIn, caller);
+            if(gosh){
+                pass = true;
+                break;
+            };
 
-            unCommon.push({type: 'LP', value: '('});
-            unCommon.push(matchI);
-            unCommon.push(opTokenR);
-            unCommon.push(matchN);
-            unCommon.push({type: 'RP', value: ')'});
+            //PUSHING UNCOMMON || COMMONS TOKENS!
+            let opTokenR = findOp(update, matchN, "RL");
+            parserTokens.push(update[matchI]);
+            parserTokens.push(opTokenR);
+            parserTokens.push(update[matchN]);
 
-            update.splice(startIn, 1);
-            update.splice(indexj, 1);
-            packman(update, "uncommon");
+            //UPDATING ARRAY!
+            update.splice(matchN, 1);
+            update.splice(matchI-1,1);
             break;
 
+            
         case 'LR':
-            console.log("LR called:");
-            let opTokenL = findOp(update, startIn, 'U' );
 
+            // PUSHING UNCOMMON || COMMONS TOKENS!
+            let opTokenL = findOp(update,gosh, "LR");
+            parserTokens.push(update[matchI]);
+            parserTokens.push(opTokenL);
+            parserTokens.push(update[matchN]);
 
-            
+            //UPDAYING ARRAY          
+            update.splice(matchN , 1);
+            update.splice(matchI,1);  
 
-
-            unCommon.push({type: 'LP', value: '('});
-            unCommon.push(matchN);
-            
-            unCommon.push(opTokenL);
-            unCommon.push(matchI);
-            unCommon.push({type: 'RP', value: ')'});
-           
-            update.splice(startIn, 1);
-            
-            update.splice(indexj, 1);
-            console.log("LR: ", update);
-            // packman(update, "uncommon");
-            
+            if(gosh){
+                packTokens = packman(update, 'uncommon')
+                return [parserTokens, packTokens];
+            };         
             break;
         
-        case 'FL':
-            console.log("FL+++++");
-            update.unshift({type: 'LP', value: '('});
-            update.push({type: 'RP', value: ')'})
 
-            console.log("FLLLL:", update);
-            return update;
-            
+
+    
+        }
+
+    if (pass) {
+        return prepInputUnCommon(update, matchI, matchN, 'LR', gosh);
     }
+    
 
-    return [unCommon,update];
+
+    console.log("Uncommon Parser to feed:", parserTokens);
+    console.log("Remaining Input:". update);
+    return [parserTokens,update];
 }
 
 
-
-module.exports = {findOp,packman,marker,prepInputCommon,prepInputUnCommon};
+module.exports = {findOp,packman,marker,prepInputCommon,prepInputUnCommon, separator};

@@ -26,7 +26,7 @@ console.log("enter");
 var textarea = document.getElementById("input_area");
 var button = document.getElementById("btn");
 var clear = document.getElementById("reset");
-
+ 
 const sideMenu = document.querySelector('aside');
 const menuBtn = document.getElementById('menu_btn');
 const closeBtn = document.getElementById('close_btn');
