@@ -1,8 +1,9 @@
-<!DOCTYE html>
+<!DOCTYPE html>
 <html>
     <head>
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial=scale=1.0">
+            <script defer src="../js/parser.js"></script>
             <link rel="stylesheet" href="../css/admin.css">
             <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Sharp" rel="stylesheet">
             <title>Boolean Expressions Project </title>
@@ -17,8 +18,7 @@
                 <div class="toggle">
                     <div class="logo">
                         <img src="../Assets/image/logo.png">
-                        <h2>BE<span class="danger">Parser</
-                            span></h2>
+                        <h2>BE<span class="danger">Parser</span></h2>
                     </div>
                 <div class="close" id="close_btn">
                     <span class="material-icons-sharp">
@@ -93,9 +93,9 @@
                     </div>
                                         
                     <div  class="total_tokens">
-                        <h2> Token's Count</h2>
+                        <h2> Output:</h2>
                         <div class="count_wrapper">
-                        <textarea  id="count_tokens" rows="1" readonly placeholder="Total Tokens" class="tokens_coutns"></textarea>
+                        <textarea  id="result_id" rows="1" readonly placeholder="Total Tokens" class="tokens_coutns"></textarea>
                         </div>
                     </div>
 
@@ -176,7 +176,9 @@
             </div>         
 
         </div>
-       <script src="../js/main.js"> </script>
-        <script src="../Parser/lexical.js"> </script>
+        <script src="../js/main.js"> </script>
+        
+
+       
     </body>
     </html>

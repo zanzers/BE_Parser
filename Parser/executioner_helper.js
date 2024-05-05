@@ -2,7 +2,6 @@
 function combineIn(reMain, parserOutput) {
 
     if(!parserOutput){
-        console.log("combineIn+++=======+++++++++++++++++++++++++++++++++++ No");
         return reMain;
     }
 
@@ -21,26 +20,27 @@ function combineIn(reMain, parserOutput) {
     return reMain;
 }
 
-function removerMarker(reMain, inputs) {
+function removerMarker(reMain, result, caller) {
 
-    console.log("removerMarker", reMain);
-    console.log("MArker" , inputs);
-
-    const flag = reMain.findIndex(token => token.type === 'UNCOMMON' || token.type === 'COMMON');
+    console.log("removing Marker: ", reMain);
+    console.log("New Input:" , result);
+  
     
+    switch(caller){
 
-    if (flag !== -1) {
-        console.log("SUCCESS To remove", flag);
-        reMain.splice(flag, 1, inputs);
-        
+        case 'Com':
+            const commonFlag = reMain.findIndex(token => token.type === "COMMON");
+           if(commonFlag !== -1){
+            reMain.splice(commonFlag, 1, result);
+           }
+            break;
+        default:
+            const uncommonFlag = reMain.findIndex(token => token.type === 'UNCOMMON');
+           if(uncommonFlag !== -1){
+            reMain.splice(uncommonFlag, 1, result)
+           }
+           
     }
-    
-    return reMain
-    
+     return reMain;
 }
-
-
-
-
-
 module.exports = {combineIn,removerMarker};

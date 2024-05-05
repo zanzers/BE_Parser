@@ -1,42 +1,33 @@
-const {findOp,packman,marker,prepInputCommon,prepInputUnCommon} = require ('./necessities');
+const {findOp,packman,marker,prepInputCommon,prepInputUnCommon,separator} = require ('./necessities');
+
 
 function statusUN(tokens){
 
     let uncommon;
     let rstIn;
-    let found =false;
 
     let update = marker(tokens); 
-    console.log("UPDATE_statusUN: ", update);
+    console.log("Updating Status of Uncommon: ", update);
 
     const status = update.findIndex(token => token.type === "UNCOMMON");
     if(status === -1){
         
-        console.log("RETURNING INPUT:" , update);
-        return [update, null];
-};
-
-    for (let i = 0; i < update.length; i++) {
-        if(!found && update[i].type === 'N' ){
-            firstIndex = i;
-            [uncommon, rstIn] = unCommonT(update,firstIndex);
-            found = true;
-            break;
-
-        }else if(!found && update[i].type === 'U'){
-            firstIndex = i;
-            found = true;
-            [uncommon, rstIn] = unCommonU(tokens,firstIndex)
-            break;
-        }
+        console.log("No Uncommon find returning input:" , update);
+        return [null, update];
+    }else{
+        const [uncommon, rstIn ] =  unCommonT(tokens);
+        return  [uncommon, rstIn]
+ 
     }
-   return  [uncommon, rstIn]
+    
+  
 }
-
 
 // DONE COMMON UNTIL SOMETHING MISS UP AGAIN0;
 function statusCom(tokens) {
-    
+
+    console.log("Updating Status of Common:" , tokens);
+   
     let [matchA, matchB] = [[],[]];
     let found = false;
 
@@ -53,9 +44,11 @@ function statusCom(tokens) {
                     matchA.push(iVal);
                     matchB.push(jVal);
                     found = true; 
+                    
                     break;
                 }
             }
+
             console.log(found);
             if(found) {
               
@@ -66,83 +59,80 @@ function statusCom(tokens) {
         }
     }
 
-
-
     if (!found) {
-        console.log("TRUE NOCOMMON");
-        let packtokens = packman(tokens,'common');
-
-        return [packtokens, null];
+        console.log("No More Common Find");
+        let packcommon = packman(tokens,'common');
+       
+        return [packcommon, null]
     }   
 }
 
-
 // DONE UNCOMMON UNTIL SOMETHING MISS UP AGAIN1;
-function unCommonT(update,firstIndex) {
-
-    let uncommon;
-    let rstIn;
+function unCommonT(update) {
+    let matchI;
+    let matchN;
+    let gosh = false;
     let foundI = false;
 
-        if(update[firstIndex].type === 'N'){
-            const nVal = update[firstIndex].value;
-           
-            for (let j = firstIndex; j >= 0; j--) {
-                if (!foundI && update[j].type === 'I' && update[j].value === nVal) {
-                    let indexj = j
-                    matchIR = update[j];
-                    matchNR = update[firstIndex];
-                     [uncommon, rstIn] = prepInputUnCommon(update, matchIR,matchNR,'RL',firstIndex,indexj);
-                    foundI = true;
-                    break;
-                }
-            }
-            for (let j = firstIndex + 1; j < update.length; j++){
-               if (!foundI && update[j].type === 'I' && update[j].value === nVal){
-                     let indexj = j
-                    matchIL = update[j];
-                    matchNL = update[firstIndex];
-                     [uncommon, rstIn] = prepInputUnCommon(update, matchIL,matchNL,'LR',firstIndex,indexj);
-                    foundI = true;
-                    break;
-               }
-                  
-            }
-              
-        }
-            return [uncommon, rstIn]; 
-}
+    const uncommonIndex = update.findIndex(token => token.type === 'UNCOMMON');
 
-// DONE UNCOMMON UNTIL SOMETHING MISS UP AGAIN1;
-function unCommonU(update,findIndex){
+    if (uncommonIndex !== -1) {
+        const tokenInFront = update[uncommonIndex - 1];
+        const tokenInFrontIndex = update.indexOf(tokenInFront);
+        const tokenType = update[tokenInFrontIndex].type
+        const tokensVal = update[tokenInFrontIndex].value;
 
 
-console.log("unCommonUUUUUUUUUUU::::::::::::;;", update);
+        switch(tokenType){
+            case 'I':
 
-    let rstIn;
-    let uncommon;
-
-    if(update[findIndex].type === 'U'){
-        let foundI = false;
-
-        console.log("FROM U", update," FIRSTINDEX" ,firstIndex);
-
-        for(let j = firstIndex; j <= update.length; j--){
-            if(!foundI && update[j].type === 'I'){
-                let indexj = j
-                console.log("U: ", update);
-                matchU = update[firstIndex];
-                matchI = update[j];
-                [uncommon, rstIn] = prepInputUnCommon(update, matchU,matchI,'LR',firstIndex,indexj);
-                foundI = true;
+                    for(let i = 0; i < update.length; i++){
+                        if(!foundI && update[i].type === 'N' && update[i].value === tokensVal){
+                            matchI = tokenInFrontIndex;
+                            matchN = i;
+                            gosh = separator(update, matchI, matchN);
+                            const [uncommon, rstIn] = prepInputUnCommon(update, matchI, matchN,'RL', gosh);
+                            foundI = true;
+                            return [uncommon, rstIn];
+                        }
+                    }
                 break;
+            case 'N':
+                    for(let i = tokenInFrontIndex; i >=0 ; i--){
+                        if(!foundI && update[i].type === 'I' && update[i].value === tokensVal){
+                            matchN = tokenInFrontIndex;
+                            matchI = i;
+                            gosh = separator(update, matchI, matchN);
+                            const [uncommon, rstIn] = prepInputUnCommon(update, matchI, matchN,'RL',gosh);
+                            foundI = true;
+                      
+                            return [uncommon, rstIn];
+                        }
+                    }
+                break;
+            default:
+                    for(let j = tokenInFrontIndex; j <= update.length; j--){
+                        if(!foundI && update[j].type === 'I'|| update[j].type === 'N'){
+                
+                            matchI = j;
+                            matchN = tokenInFrontIndex;
+                            gosh = separator(update, matchI, matchN);
+                            const [uncommon, rstIn] = prepInputUnCommon(update, matchI, matchN,'LR', gosh);
+                            foundI = true;
+
+                            if(gosh){
+                                packTokens = packman(rstIn, 'uncommon')
+                               return [uncommon, packTokens];
+                            }
+
+                            return[uncommon, rstIn]
+                        }
+                        
+                    }
             }
-        }
+     
     }
-    console.log("FROM U:", uncommon, rstIn);
-    return [uncommon, rstIn]; 
 }
-// matchI = {type: update[j], value: update[j].value, index: j};
 
 module.exports = {statusUN,statusCom};
 

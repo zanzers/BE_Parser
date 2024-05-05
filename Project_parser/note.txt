@@ -1,0 +1,99 @@
+ <script src="../js/main.js"> </script>
+
+
+
+
+ import {userInput} from '../js/proces'
+
+
+
+const {lexi} = require('./lexical').default;
+const executioner = require('./excutioner');
+const { checkingIn, parserProcessing } = require('./InputPrep');
+
+const startTime = performance.now();
+
+// "A'B'C+A'BC+BC'+B'C'"
+// const inputs = "A'B'C+A'BC+BC'+B'C'";
+// console.log("Main USER INPUT: ",inputs);
+// const tokens = lexi(inputs);
+// const [checking, returnIn] = checkingIn(tokens);
+
+function parseExpress(){
+    console.log("parseExpress");
+
+    const userInput = document.getElementById('input_area').value.trim().toUpperCase();
+    console.log("User Input", userInput);
+
+   
+
+
+
+
+}
+
+
+
+
+
+
+if(returnIn === null){
+    console.log("NUll");
+    executioner(checking, null)
+}else{
+    console.log("Not null");
+    const parserReturn = parserProcessing(checking)
+    executioner(returnIn,parserReturn)
+
+}
+
+const elapsedTime = performance.now() - startTime; 
+console.log("Time taken:", elapsedTime.toFixed(2), "milliseconds");
+
+import {userInput} from '../js/proces'
+
+
+
+const {lexi} = require('./lexical').default;
+const executioner = require('./excutioner');
+const { checkingIn, parserProcessing } = require('./InputPrep');
+
+const startTime = performance.now();
+
+// "A'B'C+A'BC+BC'+B'C'"
+// const inputs = "A'B'C+A'BC+BC'+B'C'";
+// console.log("Main USER INPUT: ",inputs);
+// const tokens = lexi(inputs);
+// const [checking, returnIn] = checkingIn(tokens);
+
+function parseExpress(){
+    console.log("parseExpress");
+
+    const userInput = document.getElementById('input_area').value.trim().toUpperCase();
+    console.log("User Input", userInput);
+
+   
+
+
+
+
+}
+
+
+
+
+
+
+if(returnIn === null){
+    console.log("NUll");
+    executioner(checking, null)
+}else{
+    console.log("Not null");
+    const parserReturn = parserProcessing(checking)
+    executioner(returnIn,parserReturn)
+
+}
+
+const elapsedTime = performance.now() - startTime; 
+console.log("Time taken:", elapsedTime.toFixed(2), "milliseconds");
+

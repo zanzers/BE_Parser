@@ -1,159 +1,124 @@
-const { singleIn, parserProcess } = require ('./prepProcess');
 const { checkingIn, parserProcessing } = require('./InputPrep');
 const {statusUN,statusCom} = require('./com_uncom');
-const redFlags = require ('./redFlag_parser');
 const  {combineIn, removerMarker} = require ('./executioner_helper');
-const { parserLexiA } = require('./lexical');
 
+let continueLoop = false;
+let finalVal;
+let count = 0; 
 
 function Executioner(reMain, parserOut) {
+
+    let newIn;
+    console.log("Parser ouput:", parserOut);
+    console.log("Remaining input:", reMain);
     
-       let newIn;
-       let newInput = combineIn(reMain, parserOut);
-       console.log("COMBINE INPUT: " , newInput);
 
+    let newInput = combineIn(reMain, parserOut);
+    console.log("combine_input: ", newInput);
 
-       const [unCommon , psCom] = processStatusUn(newInput)
+       const [unCommon, psCom] = processStatusUn(newInput);
+       const resultCom = processStatusCom(psCom);
+       newIn = removerMarker(resultCom, unCommon);
+       checking(newIn);
 
-       let x = Boolean(psCom !== null)
-       console.log("BOOOLEAN:", x);
-       console.log("processStatusUn", unCommon);
-
-       newIn = removerMarker(psCom, unCommon);
-
-       console.log("New set Input:" ,newIn);
-
+    continueLoop = true;
+    
+    try {
+       finalVal = checking(newIn);
+    } catch (error) {
+        if (error.message === 'Breaking out') {
               
+            continueLoop = false;
+        } else {
+            console.log("Something Error");
+        }
+    }
+    console.log("FINAL:", finalVal);
 
-
-
-
-
-
-       
-       //id psCom return null dont execute...
-       // if(psCom !== null){
-       //        console.log("===========================!!!!!!!!!!===============");
-       //        const resultCom = processStatusCom(psCom)
-       //        newIn = removerMarker(resultCom,unCommon);
-       //        checking(newIn);
-
-              
-       //        console.log("Possible Common: ", psCom);
-
-       //            console.log("Parser Output in Uncommon:", unCommon);
-
-
-       //                 console.log("===========================");
-       //                        console.log("processStatusCom: ", newIn);
-       //                console.log("===========================");
-       // }
-     
-
-     
-      
-
-  
-       // checking(unCommon)
-       // console.log("Outside:::::::", unCommon );
+return finalVal
 }
 
-let count = 0
-// function checking(newInput){
+
+function checking(newInput){
+       let chk = newInput.length;
+       console.log(('CHIKINNNG ', newInput));
+
+
+
+       switch(chk){
+              case 1:
+                     console.log("INPUT 1 ", newInput);
+                     return true;
+              case 3:       
+                     const final = checkingIn(newInput);
+                     return final;
+
+              case 4:
+                     console.log("CASE 4!!!!!!");
+                     const iTokens = newInput.filter(token => token.type === 'I' || token.type === 'N');
+                     const uTokens = newInput.some(token => token.type === 'U');
+                     const iValues = iTokens.map(token => token.value);
+                     const unique = new Set(iValues);
+
        
-//        let procesChk = [];
-//        let chk = newInput.length;
-//        console.log(('CHIKINNNG ', newInput));
 
+                     if(unique.size === iTokens.length && !uTokens){
+                            
+                            return final;
+                         
+                     }
+                     break;
+              default:
 
-//        if(!Array.isArray(newInput)){
-              
-//               chk = 1;
-//               console.log("ARRAYL:", chk);
-//        }
+              count++
+              console.log("Checking current Tokens.........returning PHASE:", count);
+              if(continueLoop){
+                     Executioner(newInput)
+              }
+              return false;       
+       } 
 
-//        switch(chk){
-//               case 1:
-//                      console.log("INPUT 1 ", newInput);
-//                      return true;
-
-           
-//               case 3:       
-//                      console.log("CASE 3:!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-                     
-
-              
-
-               
-//                      // Executioner(newInput)
-//                      break;
-
-//               default:
-
-//               count++
-//               console.log("CHECKING = RETURN:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::", count);
-//               Executioner(newInput)
-//               return false;       
-//        }    
-// }
-
-
-
-
-
-function processStatusCom(psCom){
-       let [natara, parserC] = statusCom(psCom);
-       if(parserC){
-              const [parserOut] = singleIn(parserC);
-              let parProcessCom = parserProcess(parserOut);
-              let newIn= removerMarker(natara,parProcessCom);
-
-              console.log("singleInCOMMON:::::::::::", parserOut);
-              console.log("parProcessCOMMON:::::::", parProcessCom);
-              processStatusCom(newIn)
+       if(continueLoop){
+              Executioner(newInput)
        }
-
-
-
-       console.log("STATUS COMMON RETURN: ", natara);
-       return natara;
-
+       return false;      
 }
 
+
+
+// Let processing of All common in the Array and return.
+function processStatusCom(psCom){
+       let caller = 'Com'
+       let [natara, parserC] = statusCom(psCom);
+       console.log("Processing Common");
+
+       if(parserC !== null){
+              const parserOut = checkingIn(parserC);
+              let newIn= removerMarker(natara,parserOut, caller);
+             return processStatusCom(newIn)
+       }else{
+              return natara;
+       }
+}
+// Let processing of Uncommon  in the Array and return.
 function processStatusUn(combine){
 
+      
        let foundIn = false;
        let parserOut = null;
+       let [parserFeed, psC] = statusUN(combine);    
 
-       let = [parserFeed, psC] = statusUN(combine);
+       console.log("Processing Uncommon:" , psC);
 
-    
        if(!foundIn && parserFeed){
               parserOut = checkingIn(parserFeed);
-              foundIn = true;
-              
-             }
-             console.log("parserOutput: ", parserOut);
-             console.log("Uncmmon Rest of the Input: ", psC);
-        return [parserOut, psC];
+              foundIn = true; 
+       }
+
+    
+
+       return [parserOut, psC];
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
