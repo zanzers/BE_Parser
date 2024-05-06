@@ -4,6 +4,8 @@ function combineIn(reMain, parserOutput) {
     if(!parserOutput){
         return reMain;
     }
+    console.log('Remainning Input',reMain );
+    console.log('parserOutput', parserOutput);
 
     const markerIndex = reMain.findIndex(token => token.type === 'MARKER'); 
     if (markerIndex !== -1) {

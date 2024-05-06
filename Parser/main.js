@@ -14,7 +14,7 @@ const Output = [];
 // AA+AA || A+A || A+1 || A*A  all red Flag;
 // A+A;B ||  A+A'B+B || A'B'C+A'BC+BC'+B'C' || ABC+A'+AB'C || A'B'C'+A'B'C+A'C';
 // Input that parser not been introduce yet!! (),
-const inputs = "A+A";
+const inputs = "A'B'C'+A'B'C+A'C'";
 console.log("user_input: ",inputs);
 
 const tokens = lexi(inputs);
@@ -26,11 +26,15 @@ if(inputs.length === 3){
 }else{
     const [checking, returnIn] = checkingIn(tokens);
 
+
     if(returnIn === null){
         executioner(checking, null);
     }else{
         const parserRetutn = parserProcessing(checking);
-        executioner(returnIn, checking)
+
+        console.log("parserRetutn", parserRetutn);
+
+        executioner(returnIn, parserRetutn)
     }
 }
 
